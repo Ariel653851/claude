@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anita – Restaurant Italien Paris 16</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rouge:    #C8392B;
+      --orange:   #E8753A;
+      --terra:    #D4603A;
+      --creme:    #FDF8F2;
+      --chaud:    #F5EBD8;
+      --sombre:   #1A1008;
+      --gris:     #7A6E65;
+      --or:       #D4A843;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--sombre); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 3rem;
+      transition: background 0.3s, padding 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(26,16,8,0.95);
+      backdrop-filter: blur(10px);
+      padding: 0.7rem 3rem;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-style: italic;
+      color: #fff; letter-spacing: 1px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85); text-decoration: none;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--or); }
+    .nav-tel {
+      color: var(--or); font-weight: 500; font-size: 0.9rem;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-tel:hover { color: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('facade-nuit.jpg') center/cover no-repeat;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(26,16,8,0.85) 0%,
+        rgba(26,16,8,0.3) 50%,
+        rgba(26,16,8,0.1) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      padding: 5rem 5rem;
+      max-width: 750px;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--rouge);
+      color: #fff; font-size: 0.72rem;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: 0.4rem 1rem; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-style: italic; font-weight: 400;
+      color: #fff; line-height: 0.95;
+      margin-bottom: 1.5rem;
+    }
+    .hero-desc {
+      font-size: 1rem; font-weight: 300;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7; margin-bottom: 2.5rem;
+      max-width: 460px;
+    }
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block; padding: 0.9rem 2.5rem;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      text-decoration: none; border-radius: 1px;
+      transition: all 0.25s; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary { background: var(--rouge); color: #fff; border: 1px solid var(--rouge); }
+    .btn-primary:hover { background: #a82e20; border-color: #a82e20; transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); }
+    .btn-outline:hover { border-color: var(--or); color: var(--or); }
+    .btn-dark { background: var(--sombre); color: #fff; border: 1px solid var(--sombre); }
+    .btn-dark:hover { background: #2e1e10; transform: translateY(-2px); }
+
+    /* ── SECTION COMMONS ── */
+    .s-label {
+      display: block; text-align: center;
+      font-size: 0.72rem; letter-spacing: 5px;
+      text-transform: uppercase; color: var(--rouge);
+      margin-bottom: 0.6rem;
+    }
+    .s-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; text-align: center; line-height: 1.2;
+    }
+    .s-title em { font-style: italic; color: var(--rouge); }
+    .s-line { width: 36px; height: 2px; background: var(--rouge); margin: 1rem auto 3.5rem; }
+
+    /* ── BANDE STATS ── */
+    .stats-bar {
+      background: var(--rouge);
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      text-align: center;
+    }
+    .stat-item {
+      padding: 2rem 1.5rem;
+      border-right: 1px solid rgba(255,255,255,0.15);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-style: italic;
+      color: #fff; display: block;
+    }
+    .stat-key {
+      font-size: 0.72rem; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.65);
+      margin-top: 0.3rem; display: block;
+    }
+
+    /* ── AMBIANCE ── */
+    #ambiance { padding: 7rem 2rem; background: var(--creme); }
+    .ambiance-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; max-width: 1100px; margin: 0 auto;
+      align-items: center;
+    }
+    .ambiance-imgs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 280px 200px;
+      gap: 8px;
+    }
+    .ambiance-imgs img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 2px;
+      transition: transform 0.4s;
+    }
+    .ambiance-imgs img:hover { transform: scale(1.03); }
+    .ambiance-imgs img:first-child { grid-row: span 2; }
+    .ambiance-text .s-title { text-align: left; }
+    .ambiance-text .s-label { text-align: left; }
+    .ambiance-text .s-line { margin-left: 0; }
+    .ambiance-text p {
+      color: var(--gris); line-height: 1.85;
+      font-weight: 300; margin-bottom: 1.1rem; font-size: 0.97rem;
+    }
+    .ambiance-adresse {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      margin-top: 2rem; padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .adresse-icon { font-size: 1.3rem; margin-top: 2px; }
+    .adresse-text { font-size: 0.9rem; color: var(--gris); line-height: 1.6; }
+    .adresse-text strong { color: var(--sombre); }
+
+    /* ── MENU ── */
+    #menu { padding: 7rem 2rem; background: var(--sombre); }
+    #menu .s-title { color: #fff; }
+    #menu .s-label { color: var(--orange); }
+    #menu .s-line { background: var(--orange); }
+
+    .menu-tabs {
+      display: flex; justify-content: center;
+      gap: 0; margin-bottom: 3rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      width: fit-content; margin-left: auto; margin-right: auto;
+    }
+    .tab-btn {
+      padding: 0.7rem 2rem; background: none;
+      border: none; border-right: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.45); cursor: pointer;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--rouge); color: #fff;
+    }
+
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1px; max-width: 1100px; margin: 0 auto;
+      background: rgba(255,255,255,0.05);
+    }
+    .menu-card {
+      background: var(--sombre);
+      padding: 1.5rem 1.8rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .menu-card:hover { border-color: var(--rouge); background: rgba(200,57,43,0.06); }
+    .menu-card-top {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 0.4rem;
+    }
+    .menu-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-weight: 400; color: #fff;
+    }
+    .menu-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--orange);
+      white-space: nowrap; margin-left: 1rem;
+    }
+    .menu-card p { font-size: 0.82rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
+
+    .menu-section { display: none; }
+    .menu-section.active { display: contents; }
+
+    /* ── GALLERY ── */
+    #galerie { padding: 7rem 0; background: var(--chaud); }
+    #galerie .s-label, #galerie .s-title, #galerie .s-line { margin-left: auto; margin-right: auto; display: block; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-rows: 340px 240px;
+      gap: 6px; max-width: 1300px; margin: 0 auto;
+    }
+    .gallery-grid figure {
+      overflow: hidden; position: relative; margin: 0;
+    }
+    .gallery-grid figure.tall { grid-row: span 2; }
+    .gallery-grid figure.wide { grid-column: span 2; }
+    .gallery-grid img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease;
+      display: block;
+    }
+    .gallery-grid figure:hover img { transform: scale(1.08); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(transparent 50%, rgba(26,16,8,0.6));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-grid figure:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption {
+      position: absolute; bottom: 1rem; left: 1.2rem;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.3s; transform: translateY(6px);
+      transition: all 0.3s;
+    }
+    .gallery-grid figure:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+    /* ── RESERVATION ── */
+    #reservation { padding: 7rem 2rem; background: var(--creme); }
+
+    .resa-grid {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 6rem; max-width: 1100px; margin: 0 auto;
+      align-items: start;
+    }
+
+    .horaires-table { width: 100%; margin-top: 0.5rem; }
+    .horaires-table tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .horaires-table td {
+      padding: 0.6rem 0; font-size: 0.9rem;
+      color: var(--gris);
+    }
+    .horaires-table td:first-child {
+      font-weight: 500; color: var(--sombre);
+      text-transform: capitalize; width: 110px;
+    }
+    .horaires-table .ferme { color: #bbb; font-style: italic; }
+    .horaires-table .today td:first-child { color: var(--rouge); }
+
+    .resa-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; margin: 2rem 0 0.5rem; color: var(--sombre);
+    }
+    .resa-info h3:first-child { margin-top: 0; }
+    .resa-tel {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--rouge);
+      text-decoration: none; font-style: italic;
+      transition: color 0.2s;
+    }
+    .resa-tel:hover { color: var(--terra); }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group.full { grid-column: span 2; }
+    label {
+      font-size: 0.7rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gris);
+    }
+    input, select, textarea {
+      padding: 0.8rem 1rem;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      color: var(--sombre);
+      border-radius: 1px; outline: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--rouge); }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-submit { grid-column: span 2; margin-top: 0.5rem; }
+    .form-submit .btn { width: 100%; padding: 1rem; border: none; }
+
+    /* ── MAP STRIP ── */
+    .map-strip {
+      height: 380px; overflow: hidden; position: relative;
+    }
+    .map-strip iframe { width: 100%; height: 100%; border: none; }
+    .map-overlay {
+      position: absolute; top: 50%; left: 5rem;
+      transform: translateY(-50%);
+      background: var(--rouge);
+      color: #fff; padding: 1.5rem 2rem;
+      z-index: 1;
+    }
+    .map-overlay-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-style: italic; margin-bottom: 0.3rem;
+    }
+    .map-overlay p { font-size: 0.85rem; opacity: 0.85; line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--sombre); color: rgba(255,255,255,0.35);
+      text-align: center; padding: 2rem;
+      font-size: 0.78rem; letter-spacing: 0.5px;
+    }
+    footer span { color: var(--orange); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      nav.scrolled { padding: 0.7rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-content { padding: 3rem 1.5rem; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .ambiance-wrap, .resa-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .ambiance-imgs { grid-template-rows: 200px 160px; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-grid figure.tall, .gallery-grid figure.wide {
+        grid-column: span 2; grid-row: span 1; height: 240px;
+      }
+      .gallery-grid figure { height: 180px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full, .form-submit { grid-column: span 1; }
+      .map-overlay { left: 1rem; right: 1rem; top: auto; bottom: 0; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Anita</div>
+  <ul class="nav-links">
+    <li><a href="#ambiance">Le restaurant</a></li>
+    <li><a href="#menu">La carte</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#reservation">Réservation</a></li>
+  </ul>
+  <a href="tel:+33145272493" class="nav-tel">01 45 27 24 93</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <span class="hero-tag">Restaurant Italien · Paris 16<sup>e</sup></span>
+    <h1>Anita</h1>
+    <p class="hero-desc">Pizzas au feu de bois, pâtes fraîches, vins italiens — une trattoria chaleureuse en bord de Seine, quai Louis Blériot.</p>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn btn-primary">Découvrir la carte</a>
+      <a href="#reservation" class="btn btn-outline">Réserver</a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-val">★ 4,5</span>
+    <span class="stat-key">Note Google</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">6j/7</span>
+    <span class="stat-key">Ouvert toute la semaine</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">20–35€</span>
+    <span class="stat-key">Prix moyen</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">Terrasse</span>
+    <span class="stat-key">En bord de Seine</span>
+  </div>
+</div>
+
+<!-- AMBIANCE -->
+<section id="ambiance">
+  <div class="ambiance-wrap">
+    <div class="ambiance-imgs">
+      <img src="salle2.jpg" alt="Salle Anita banquettes cuir" />
+      <img src="salle3.jpg" alt="Intérieur Anita" />
+      <img src="terrasse.jpg" alt="Terrasse Anita le soir" />
+    </div>
+    <div class="ambiance-text">
+      <span class="s-label">L'esprit du lieu</span>
+      <h2 class="s-title">Une trattoria<br><em>comme à Rome</em></h2>
+      <div class="s-line" style="margin-left:0;"></div>
+      <p>Nichée quai Louis Blériot, à deux pas de la Seine, Anita est bien plus qu'un restaurant italien — c'est une adresse de quartier où l'on revient. Pour les suspensions orangées, les banquettes en cuir, la chaleur des photos noir et blanc aux murs.</p>
+      <p>En cuisine, les produits viennent d'Italie. Les pâtes sont fraîches, les pizzas cuisent au feu de bois, les vins sont choisis avec soin. Le soir en terrasse, l'été, c'est l'une des plus belles adresses du 16<sup>e</sup>.</p>
+      <div class="ambiance-adresse">
+        <span class="adresse-icon">📍</span>
+        <div class="adresse-text">
+          <strong>182 Quai Louis Blériot, 75016 Paris</strong><br>
+          Métro Porte de Saint-Cloud (ligne 9)
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <span class="s-label">La carte</span>
+  <h2 class="s-title" style="color:#fff;">Cuisine <em style="color:var(--orange);">italienne</em></h2>
+  <div class="s-line" style="background:var(--orange);"></div>
+
+  <div class="menu-tabs">
+    <button class="tab-btn active" onclick="showTab('antipasti',this)">Antipasti</button>
+    <button class="tab-btn" onclick="showTab('pizzas',this)">Pizzas</button>
+    <button class="tab-btn" onclick="showTab('pates',this)">Pâtes</button>
+    <button class="tab-btn" onclick="showTab('desserts',this)">Desserts</button>
+  </div>
+
+  <div class="menu-grid">
+
+    <div class="menu-section active" id="antipasti">
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Burrata</h3><span class="menu-price">14 €</span></div>
+        <p>Burrata crémeuse, tomates cerises, huile d'olive, basilic</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Arancini</h3><span class="menu-price">11 €</span></div>
+        <p>Boulettes de riz frites, cœur fondant mozzarella, roquette</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Carpaccio de bœuf</h3><span class="menu-price">16 €</span></div>
+        <p>Bœuf tranché, copeaux de parmesan, roquette, câpres, citron</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Bruschetta</h3><span class="menu-price">8 €</span></div>
+        <p>Pain grillé, tomates fraîches, ail, basilic, huile d'olive</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Charcuterie italienne</h3><span class="menu-price">15 €</span></div>
+        <p>Sélection de charcuteries italiennes, olives marinées, focaccia</p>
+      </div>
+    </div>
+
+    <div class="menu-section" id="pizzas">
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Margherita</h3><span class="menu-price">13 €</span></div>
+        <p>Tomate San Marzano, fior di latte, basilic frais</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Regina</h3><span class="menu-price">15 €</span></div>
+        <p>Tomate, mozzarella, jambon cuit, champignons</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Salmone</h3><span class="menu-price">17 €</span></div>
+        <p>Crème, saumon fumé, mozzarella, câpres, aneth</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Vegetariana</h3><span class="menu-price">14 €</span></div>
+        <p>Tomate, mozzarella, aubergines, courgettes, poivrons, olives</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Roquette & Bresaola</h3><span class="menu-price">17 €</span></div>
+        <p>Base blanche, bresaola, roquette fraîche, parmesan, tomates confites</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Calzone</h3><span class="menu-price">15 €</span></div>
+        <p>Pizza pliée, ricotta, jambon, mozzarella, tomate</p>
+      </div>
+    </div>
+
+    <div class="menu-section" id="pates">
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Rigatoni all'Arrabbiata</h3><span class="menu-price">14 €</span></div>
+        <p>Tomate, ail, piment, pecorino</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Linguine Truffe</h3><span class="menu-price">19 €</span></div>
+        <p>Crème de truffe, champignons, parmesan, huile de truffe noire</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Spaghetti Carbonara</h3><span class="menu-price">15 €</span></div>
+        <p>Recette romaine : guanciale, jaune d'œuf, pecorino, poivre</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Tagliatelle Bolognese</h3><span class="menu-price">16 €</span></div>
+        <p>Pâtes fraîches, ragù bœuf & porc mijoté, parmesan</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Escalope Milanaise</h3><span class="menu-price">22 €</span></div>
+        <p>Veau pané, roquette, tomates cerises, citron</p>
+      </div>
+    </div>
+
+    <div class="menu-section" id="desserts">
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Tiramisu Maison</h3><span class="menu-price">8 €</span></div>
+        <p>Recette traditionnelle, mascarpone, café, savoiardi, cacao</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Affogato</h3><span class="menu-price">7 €</span></div>
+        <p>Glace vanille maison, espresso chaud versé à table</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Panna Cotta</h3><span class="menu-price">7 €</span></div>
+        <p>Coulis de fruits rouges ou caramel</p>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-top"><h3>Gelato Artigianale</h3><span class="menu-price">6 €</span></div>
+        <p>3 boules artisanales au choix : pistache, citron de Sicile, chocolat</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie">
+  <span class="s-label">Atmosphère</span>
+  <h2 class="s-title">En <em>images</em></h2>
+  <div class="s-line"></div>
+  <div class="gallery-grid">
+
+    <figure class="tall">
+      <img src="facade-nuit.jpg" alt="Façade Anita de nuit" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">La façade</div>
+    </figure>
+
+    <figure>
+      <img src="salle1.jpg" alt="Salle Anita" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">La salle</div>
+    </figure>
+
+    <figure>
+      <img src="pizza.jpg" alt="Pizza Anita" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">Nos pizzas</div>
+    </figure>
+
+    <figure class="wide">
+      <img src="facade-jour.jpg" alt="Façade Anita de jour" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">Quai Louis Blériot</div>
+    </figure>
+
+    <figure>
+      <img src="arancini.jpg" alt="Arancini" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">Arancini</div>
+    </figure>
+
+    <figure>
+      <img src="affogato.jpg" alt="Affogato" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">Affogato</div>
+    </figure>
+
+    <figure>
+      <img src="rigatoni.jpg" alt="Rigatoni" />
+      <div class="gallery-overlay"></div>
+      <div class="gallery-caption">Rigatoni</div>
+    </figure>
+
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation">
+  <span class="s-label">Réserver</span>
+  <h2 class="s-title">Votre table <em>vous attend</em></h2>
+  <div class="s-line"></div>
+
+  <div class="resa-grid">
+    <div class="resa-info">
+      <h3>Téléphone</h3>
+      <a href="tel:+33145272493" class="resa-tel">01 45 27 24 93</a>
+
+      <h3>Horaires</h3>
+      <table class="horaires-table">
+        <tr><td>Lundi</td><td>12:00 – 14:30</td></tr>
+        <tr><td>Mardi</td><td>12:00 – 14:30 · 19:15 – 00:00</td></tr>
+        <tr><td>Mercredi</td><td>12:00 – 14:30 · 19:15 – 00:00</td></tr>
+        <tr><td>Jeudi</td><td>12:00 – 14:30 · 19:15 – 00:00</td></tr>
+        <tr><td>Vendredi</td><td>12:00 – 14:30 · 19:15 – 00:00</td></tr>
+        <tr><td>Samedi</td><td>19:15 – 00:00</td></tr>
+        <tr><td>Dimanche</td><td class="ferme">Fermé</td></tr>
+      </table>
+
+      <h3>Adresse</h3>
+      <p style="color:var(--gris);font-size:0.9rem;line-height:1.6;">
+        182 Quai Louis Blériot<br>75016 Paris<br>
+        Métro Porte de Saint-Cloud (ligne 9)
+      </p>
+    </div>
+
+    <form onsubmit="handleResa(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="tel">Téléphone</label>
+          <input type="tel" id="tel" placeholder="06 00 00 00 00" required />
+        </div>
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" required />
+        </div>
+        <div class="form-group">
+          <label for="heure">Heure</label>
+          <select id="heure">
+            <option>12h00</option><option>12h30</option><option>13h00</option>
+            <option>13h30</option><option>19h15</option><option>19h30</option>
+            <option>20h00</option><option>20h30</option><option>21h00</option>
+            <option>21h30</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="couverts">Nombre de personnes</label>
+          <select id="couverts">
+            <option>1 personne</option><option>2 personnes</option>
+            <option>3 personnes</option><option>4 personnes</option>
+            <option>5 personnes</option><option>6 personnes</option>
+            <option>7 personnes</option><option>8+ personnes</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="msg">Message</label>
+          <textarea id="msg" placeholder="Allergies, anniversaire, occasion spéciale…"></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn btn-dark">Envoyer la demande</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- MAP -->
+<div class="map-strip">
+  <iframe
+    src="https://www.openstreetmap.org/export/embed.html?bbox=2.256,48.843,2.276,48.853&layer=mapnik&marker=48.848,2.266"
+    loading="lazy"
+    title="Localisation Anita Paris 16"
+  ></iframe>
+  <div class="map-overlay">
+    <div class="map-overlay-name">Anita</div>
+    <p>182 Quai Louis Blériot<br>75016 Paris</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 <span>Anita</span> · Restaurant Italien · 182 Quai Louis Blériot · Paris 16<sup>e</sup></p>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Parallax hero
+  const heroBg = document.getElementById('heroBg');
+  window.addEventListener('scroll', () => {
+    heroBg.style.transform = `scale(1.05) translateY(${window.scrollY * 0.25}px)`;
+  });
+
+  // Tabs menu
+  function showTab(id, btn) {
+    document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Form
+  function handleResa(e) {
+    e.preventDefault();
+    alert('Merci ! Votre demande a bien été envoyée. Nous vous rappelons pour confirmer.');
+    e.target.reset();
+  }
+
+  // Fade-in
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('section').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>
