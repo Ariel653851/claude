@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Petit Chaillot – Bistrot Parisien</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rouge:   #8B1A1A;
+      --or:      #C9A84C;
+      --creme:   #FAF6EE;
+      --sombre:  #1C1410;
+      --gris:    #6B6460;
+      --beige:   #EDE8DE;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--creme);
+      color: var(--sombre);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(28, 20, 16, 0.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 400; font-style: italic;
+      color: var(--or); letter-spacing: 1px;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.78rem; font-weight: 400; letter-spacing: 1.5px;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--or); }
+    .nav-tel {
+      color: var(--or); font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; letter-spacing: 0.5px;
+    }
+    .nav-tel:hover { color: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh; position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; color: #fff; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(28,20,16,0.55) 0%, rgba(28,20,16,0.35) 50%, rgba(28,20,16,0.7) 100%),
+        url('https://www.gillespudlowski.com/wp-content/uploads/2026/06/une-table-et-le-vieux-telephone.jpeg') center/cover no-repeat;
+    }
+    .hero-content { position: relative; z-index: 1; padding: 2rem; }
+    .hero-eyebrow {
+      font-size: 0.72rem; letter-spacing: 5px; text-transform: uppercase;
+      color: var(--or); margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 300; line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--or); }
+    .hero-sub {
+      font-size: 0.88rem; font-weight: 300;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+    .hero-adresse {
+      font-size: 0.82rem; color: rgba(255,255,255,0.55);
+      margin-bottom: 2.5rem; letter-spacing: 1px;
+    }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block; padding: 0.85rem 2.4rem;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      text-decoration: none; border-radius: 1px;
+      transition: all 0.25s;
+    }
+    .btn-primary { background: var(--rouge); color: #fff; border: 1px solid var(--rouge); }
+    .btn-primary:hover { background: #a02020; border-color: #a02020; transform: translateY(-2px); }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); }
+    .btn-outline:hover { border-color: var(--or); color: var(--or); transform: translateY(-2px); }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2rem; }
+
+    .s-label {
+      display: block; text-align: center;
+      font-size: 0.72rem; letter-spacing: 5px;
+      text-transform: uppercase; color: var(--or);
+      margin-bottom: 0.7rem;
+    }
+    .s-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300; text-align: center;
+      line-height: 1.2; margin-bottom: 0.8rem;
+    }
+    .s-title em { font-style: italic; color: var(--rouge); }
+    .s-line {
+      width: 40px; height: 1px; background: var(--or);
+      margin: 0 auto 3.5rem;
+    }
+
+    /* ── AMBIANCE ── */
+    #ambiance { background: var(--sombre); color: #fff; }
+    #ambiance .s-title { color: #fff; }
+
+    .ambiance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem; max-width: 1100px; margin: 0 auto;
+      align-items: center;
+    }
+    .ambiance-text p {
+      color: rgba(255,255,255,0.65);
+      line-height: 1.9; font-weight: 300;
+      margin-bottom: 1.2rem; font-size: 1rem;
+    }
+    .ambiance-img {
+      width: 100%; height: 500px; object-fit: cover; border-radius: 2px;
+    }
+    .ambiance-detail {
+      display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;
+    }
+    .detail { border-left: 2px solid var(--or); padding-left: 1rem; }
+    .detail-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300; color: var(--or);
+    }
+    .detail-key {
+      font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ── MENU ── */
+    #menu { background: var(--beige); }
+
+    .menu-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 5rem; max-width: 1000px; margin: 0 auto;
+    }
+
+    .menu-section { margin-bottom: 3rem; }
+    .menu-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-style: italic; font-weight: 400;
+      color: var(--rouge); margin-bottom: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(139,26,26,0.2);
+    }
+
+    .menu-item {
+      display: flex; justify-content: space-between;
+      align-items: baseline; padding: 0.65rem 0;
+      border-bottom: 1px dotted rgba(0,0,0,0.1);
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .item-name { font-size: 0.92rem; font-weight: 400; color: var(--sombre); }
+    .item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 600; color: var(--rouge);
+      white-space: nowrap; margin-left: 1.5rem;
+    }
+
+    .menu-note {
+      text-align: center; font-size: 0.8rem; color: var(--gris);
+      font-style: italic; margin-top: 2rem;
+      max-width: 600px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-mosaic {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 260px 260px;
+      gap: 6px; max-width: 1200px; margin: 0 auto;
+    }
+    .gallery-mosaic img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.4s ease, filter 0.4s ease;
+      filter: brightness(0.95);
+    }
+    .gallery-mosaic img:hover { transform: scale(1.03); filter: brightness(1); }
+    .gallery-mosaic .span2 { grid-column: span 2; }
+    .gallery-mosaic .spanr { grid-row: span 2; }
+
+    /* ── RESERVATION ── */
+    #reservation { background: var(--sombre); color: #fff; }
+    #reservation .s-title { color: #fff; }
+
+    .resa-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; max-width: 1000px; margin: 0 auto;
+      align-items: start;
+    }
+    .resa-info p {
+      color: rgba(255,255,255,0.6); font-weight: 300;
+      line-height: 1.9; margin-bottom: 1rem; font-size: 0.95rem;
+    }
+    .resa-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; color: var(--or);
+      margin: 1.5rem 0 0.4rem;
+    }
+    .resa-tel {
+      display: inline-block; font-size: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      color: #fff; text-decoration: none;
+      border-bottom: 1px solid var(--or); padding-bottom: 2px;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group.full { grid-column: span 2; }
+    label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+    input, select, textarea {
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff; border-radius: 1px;
+      font-family: 'Jost', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.25); }
+    input:focus, select:focus, textarea:focus { border-color: var(--or); }
+    select option { background: var(--sombre); }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-submit { grid-column: span 2; margin-top: 0.5rem; }
+    .form-submit .btn-primary { width: 100%; padding: 1rem; text-align: center; cursor: pointer; font-family: 'Jost', sans-serif; }
+
+    /* ── CONTACT BAR ── */
+    .contact-bar {
+      background: var(--rouge);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+    }
+    .contact-item {
+      padding: 2.5rem 2rem;
+      border-right: 1px solid rgba(255,255,255,0.15);
+    }
+    .contact-item:last-child { border-right: none; }
+    .contact-item-label {
+      font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,0.65); margin-bottom: 0.6rem;
+    }
+    .contact-item-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: #fff; font-weight: 400;
+      line-height: 1.6;
+    }
+    .contact-item-val a { color: #fff; text-decoration: none; }
+    .contact-item-val a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--sombre);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      text-align: center; padding: 1.8rem 2rem;
+      color: rgba(255,255,255,0.3); font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+    footer span { color: var(--or); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links, .nav-tel { display: none; }
+
+      .ambiance-grid, .resa-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      .ambiance-img { height: 300px; }
+
+      .menu-cols { grid-template-columns: 1fr; gap: 0; }
+
+      .gallery-mosaic {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-mosaic .span2, .gallery-mosaic .spanr {
+        grid-column: span 1; grid-row: span 1;
+      }
+      .gallery-mosaic img { height: 180px; }
+
+      .contact-bar { grid-template-columns: 1fr; }
+      .contact-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full, .form-submit { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Le Petit Chaillot</div>
+  <ul class="nav-links">
+    <li><a href="#ambiance">Le restaurant</a></li>
+    <li><a href="#menu">La carte</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#reservation">Réservation</a></li>
+  </ul>
+  <a href="tel:+33140509001" class="nav-tel">01 40 50 90 01</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Bistrot Parisien · Paris 16<sup>e</sup></p>
+    <h1><em>Le Petit</em><br>Chaillot</h1>
+    <p class="hero-sub">Cuisine du marché · Vins naturels · Depuis 2019</p>
+    <p class="hero-adresse">7 avenue Pierre 1<sup>er</sup> de Serbie · Métro Iéna</p>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn btn-primary">Découvrir la carte</a>
+      <a href="#reservation" class="btn btn-outline">Réserver une table</a>
+    </div>
+  </div>
+</section>
+
+<!-- AMBIANCE -->
+<section id="ambiance">
+  <span class="s-label">L'esprit du lieu</span>
+  <h2 class="s-title">Un bistrot d'amis,<br><em>comme autrefois</em></h2>
+  <div class="s-line"></div>
+  <div class="ambiance-grid">
+    <img
+      src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/guillaume-et-thomas-au-bar.jpeg"
+      alt="Guillaume et Thomas, les patrons du Petit Chaillot"
+      class="ambiance-img"
+    />
+    <div class="ambiance-text">
+      <p>Niché avenue Pierre 1<sup>er</sup> de Serbie, à deux pas du Trocadéro, Le Petit Chaillot est né de l'amitié de Thomas et Guillaume. Un endroit où l'on revient, où l'on s'attarde.</p>
+      <p>Banquettes en moleskine, néons jaunes suspendus, vieux téléphone de comptoir — une atmosphère qui sent le Paris éternel, celui des brasseries de quartier où tout le monde se connaît.</p>
+      <p>La cuisine ? Française, généreuse, faite de bons produits. Une côte de bœuf à partager, un foie gras maison, une tarte Tatin encore tiède. Rien de superfétatoire.</p>
+      <div class="ambiance-detail">
+        <div class="detail">
+          <div class="detail-val">7j/7</div>
+          <div class="detail-key">Ouvert tous les jours</div>
+        </div>
+        <div class="detail">
+          <div class="detail-val">7h – 23h</div>
+          <div class="detail-key">Horaires continus</div>
+        </div>
+        <div class="detail">
+          <div class="detail-val">30 €</div>
+          <div class="detail-key">Menu déjeuner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <span class="s-label">La carte</span>
+  <h2 class="s-title">Une cuisine <em>de saison</em></h2>
+  <div class="s-line"></div>
+
+  <div class="menu-cols">
+
+    <!-- COL 1 -->
+    <div>
+      <div class="menu-section">
+        <div class="menu-section-title">Entrées</div>
+        <div class="menu-item"><span class="item-name">Soupe à l'oignon</span><span class="item-price">12 €</span></div>
+        <div class="menu-item"><span class="item-name">Poireaux vinaigrette</span><span class="item-price">9 €</span></div>
+        <div class="menu-item"><span class="item-name">Œuf parfait</span><span class="item-price">11 €</span></div>
+        <div class="menu-item"><span class="item-name">Foie gras maison</span><span class="item-price">17 €</span></div>
+        <div class="menu-item"><span class="item-name">Tatin salée</span><span class="item-price">12 €</span></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Desserts</div>
+        <div class="menu-item"><span class="item-name">Madeleines</span><span class="item-price">12 €</span></div>
+        <div class="menu-item"><span class="item-name">Fondant au chocolat</span><span class="item-price">12 €</span></div>
+        <div class="menu-item"><span class="item-name">Tarte Tatin</span><span class="item-price">10 €</span></div>
+        <div class="menu-item"><span class="item-name">Profiteroles</span><span class="item-price">10 €</span></div>
+        <div class="menu-item"><span class="item-name">Tarte du jour</span><span class="item-price">15 €</span></div>
+        <div class="menu-item"><span class="item-name">Fromages</span><span class="item-price">15 €</span></div>
+      </div>
+    </div>
+
+    <!-- COL 2 -->
+    <div>
+      <div class="menu-section">
+        <div class="menu-section-title">Plats</div>
+        <div class="menu-item"><span class="item-name">Suprême de poulet aux morilles</span><span class="item-price">26 €</span></div>
+        <div class="menu-item"><span class="item-name">Échine de porc fermier</span><span class="item-price">22 €</span></div>
+        <div class="menu-item"><span class="item-name">Ris de veau</span><span class="item-price">27 €</span></div>
+        <div class="menu-item"><span class="item-name">Truite sauvage</span><span class="item-price">25 €</span></div>
+        <div class="menu-item"><span class="item-name">Burger LPC</span><span class="item-price">25 €</span></div>
+        <div class="menu-item"><span class="item-name">Coquillettes coquines</span><span class="item-price">25 €</span></div>
+        <div class="menu-item"><span class="item-name">Tartare de bœuf au couteau</span><span class="item-price">22 €</span></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">À partager</div>
+        <div class="menu-item"><span class="item-name">Côte de bœuf (2 personnes)</span><span class="item-price">119 €</span></div>
+      </div>
+    </div>
+
+  </div>
+  <p class="menu-note">Carte mise à jour selon le marché et les saisons · Carte des vins disponible sur place</p>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie" style="padding: 6rem 0;">
+  <span class="s-label">L'atmosphère</span>
+  <h2 class="s-title" style="margin-bottom:0.8rem">En <em>images</em></h2>
+  <div class="s-line"></div>
+  <div class="gallery-mosaic">
+    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/une-table-et-le-vieux-telephone.jpeg" alt="Salle du restaurant" class="spanr" style="height:100%;" />
+    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/foie-gras-maison-.jpeg" alt="Foie gras maison" />
+    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/poireaux.jpeg" alt="Poireaux vinaigrette" />
+    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/tartare-frites.jpeg" alt="Tartare frites" class="span2" />
+    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/tatin.jpeg" alt="Tarte Tatin" />
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation">
+  <span class="s-label">Réserver</span>
+  <h2 class="s-title">Votre table <em>vous attend</em></h2>
+  <div class="s-line"></div>
+
+  <div class="resa-wrap">
+    <div class="resa-info">
+      <p>Le Petit Chaillot accueille particuliers, familles et groupes tous les jours de 7h à 23h. Pour les groupes de plus de 8 personnes, n'hésitez pas à nous appeler directement.</p>
+      <h3>Par téléphone</h3>
+      <a href="tel:+33140509001" class="resa-tel">01 40 50 90 01</a>
+      <h3>Adresse</h3>
+      <p>7 avenue Pierre 1<sup>er</sup> de Serbie<br>75116 Paris<br>Métro Iéna (ligne 9)</p>
+      <h3>Horaires</h3>
+      <p>Ouvert 7j/7<br>7h00 – 23h00 en continu</p>
+    </div>
+
+    <form onsubmit="handleResa(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="tel">Téléphone</label>
+          <input type="tel" id="tel" placeholder="06 00 00 00 00" required />
+        </div>
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" required />
+        </div>
+        <div class="form-group">
+          <label for="heure">Heure</label>
+          <select id="heure">
+            <option>12h00</option><option>12h30</option><option>13h00</option>
+            <option>13h30</option><option>19h00</option><option>19h30</option>
+            <option>20h00</option><option>20h30</option><option>21h00</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="couverts">Nombre de personnes</label>
+          <select id="couverts">
+            <option>1 personne</option><option>2 personnes</option>
+            <option>3 personnes</option><option>4 personnes</option>
+            <option>5 personnes</option><option>6 personnes</option>
+            <option>7 personnes</option><option>8+ personnes</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="msg">Message (allergies, occasion…)</label>
+          <textarea id="msg" placeholder="Un message pour nous ?"></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- CONTACT BAR -->
+<div class="contact-bar">
+  <div class="contact-item">
+    <div class="contact-item-label">Adresse</div>
+    <div class="contact-item-val">7 av. Pierre 1<sup>er</sup> de Serbie<br>75116 Paris · Métro Iéna</div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-item-label">Téléphone</div>
+    <div class="contact-item-val"><a href="tel:+33140509001">01 40 50 90 01</a></div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-item-label">Horaires</div>
+    <div class="contact-item-val">Tous les jours<br>7h00 – 23h00</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 <span>Le Petit Chaillot</span> · Bistrot Parisien · Paris 16<sup>e</sup></p>
+</footer>
+
+<script>
+  function handleResa(e) {
+    e.preventDefault();
+    alert('Merci ! Votre demande de réservation a bien été envoyée. Nous vous rappelons pour confirmation.');
+    e.target.reset();
+  }
+
+  // Fade-in sections
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('section, .contact-bar').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>
