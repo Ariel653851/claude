@@ -194,18 +194,30 @@
     /* ── GALLERY ── */
     .gallery-mosaic {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 260px 260px;
-      gap: 6px; max-width: 1200px; margin: 0 auto;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 380px 280px;
+      gap: 8px; max-width: 1200px; margin: 0 auto;
     }
+    .gallery-mosaic figure {
+      overflow: hidden; position: relative; margin: 0;
+    }
+    .gallery-mosaic figure.tall { grid-row: span 2; }
+    .gallery-mosaic figure.wide { grid-column: span 2; }
     .gallery-mosaic img {
       width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.4s ease, filter 0.4s ease;
-      filter: brightness(0.95);
+      transition: transform 0.5s ease;
+      display: block;
     }
-    .gallery-mosaic img:hover { transform: scale(1.03); filter: brightness(1); }
-    .gallery-mosaic .span2 { grid-column: span 2; }
-    .gallery-mosaic .spanr { grid-row: span 2; }
+    .gallery-mosaic figure:hover img { transform: scale(1.06); }
+    .gallery-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1rem 1.2rem 0.8rem;
+      background: linear-gradient(transparent, rgba(28,20,16,0.7));
+      color: rgba(255,255,255,0.85);
+      font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-mosaic figure:hover .gallery-caption { opacity: 1; }
 
     /* ── RESERVATION ── */
     #reservation { background: var(--sombre); color: #fff; }
@@ -298,10 +310,9 @@
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto;
       }
-      .gallery-mosaic .span2, .gallery-mosaic .spanr {
-        grid-column: span 1; grid-row: span 1;
-      }
-      .gallery-mosaic img { height: 180px; }
+      .gallery-mosaic figure.tall,
+      .gallery-mosaic figure.wide { grid-column: span 2; grid-row: span 1; }
+      .gallery-mosaic figure { height: 200px; }
 
       .contact-bar { grid-template-columns: 1fr; }
       .contact-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
@@ -432,11 +443,37 @@
   <h2 class="s-title" style="margin-bottom:0.8rem">En <em>images</em></h2>
   <div class="s-line"></div>
   <div class="gallery-mosaic">
-    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/une-table-et-le-vieux-telephone.jpeg" alt="Salle du restaurant" class="spanr" style="height:100%;" />
-    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/foie-gras-maison-.jpeg" alt="Foie gras maison" />
-    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/poireaux.jpeg" alt="Poireaux vinaigrette" />
-    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/tartare-frites.jpeg" alt="Tartare frites" class="span2" />
-    <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/tatin.jpeg" alt="Tarte Tatin" />
+
+    <!-- Grande photo salle — colonne gauche, double hauteur -->
+    <figure class="tall">
+      <img src="salle2.jpg" alt="La salle du Petit Chaillot" />
+      <div class="gallery-caption">La salle</div>
+    </figure>
+
+    <!-- Colonne centre haut -->
+    <figure>
+      <img src="salle1.jpg" alt="Intérieur bistrot" />
+      <div class="gallery-caption">L'ambiance</div>
+    </figure>
+
+    <!-- Colonne droite haut -->
+    <figure>
+      <img src="plat.jpg" alt="Plat du jour" />
+      <div class="gallery-caption">En cuisine</div>
+    </figure>
+
+    <!-- Bas : photo bar large -->
+    <figure class="wide">
+      <img src="bar.jpg" alt="Le bar du Petit Chaillot" />
+      <div class="gallery-caption">Le bar</div>
+    </figure>
+
+    <!-- Bas droite -->
+    <figure>
+      <img src="https://www.gillespudlowski.com/wp-content/uploads/2026/06/foie-gras-maison-.jpeg" alt="Foie gras maison" />
+      <div class="gallery-caption">Foie gras maison</div>
+    </figure>
+
   </div>
 </section>
 
@@ -454,7 +491,12 @@
       <h3>Adresse</h3>
       <p>7 avenue Pierre 1<sup>er</sup> de Serbie<br>75116 Paris<br>Métro Iéna (ligne 9)</p>
       <h3>Horaires</h3>
-      <p>Ouvert 7j/7<br>7h00 – 23h00 en continu</p>
+      <p>
+        Lun – Ven &amp; Mer – Jeu : 8h00 – 23h00<br>
+        Samedi : 10h00 – 23h00<br>
+        Dimanche : 8h00 – 21h30<br>
+        <em style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Ouvert 7j/7</em>
+      </p>
     </div>
 
     <form onsubmit="handleResa(event)">
@@ -512,7 +554,7 @@
   </div>
   <div class="contact-item">
     <div class="contact-item-label">Horaires</div>
-    <div class="contact-item-val">Tous les jours<br>7h00 – 23h00</div>
+    <div class="contact-item-val">Lun–Ven : 8h–23h · Sam : 10h–23h<br>Dim : 8h–21h30</div>
   </div>
 </div>
 
