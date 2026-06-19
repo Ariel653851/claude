@@ -54,54 +54,103 @@
     }
     .nav-tel:hover { color: #fff; }
 
-    /* ── HERO ── */
-    .hero {
-      height: 100vh; position: relative;
-      display: flex; align-items: flex-end;
+    /* ── HERO SCROLL EXPANSION ── */
+    .hero-expand-wrap {
+      position: relative;
+      height: 100vh;
+      background: var(--sombre);
       overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
     }
-    .hero-bg {
+
+    /* fond flouté qui disparaît */
+    .hero-bg-blur {
       position: absolute; inset: 0;
-      background: url('facade.jpg') center/cover no-repeat;
-      transform: scale(1.05);
-      transition: transform 8s ease;
+      background-image: url('facade.jpg');
+      background-size: cover; background-position: center;
+      filter: blur(18px) brightness(0.35);
+      transform: scale(1.12);
+      transition: opacity 0.3s;
     }
-    .hero-bg::after {
-      content: '';
+
+    /* carte image centrale qui s'agrandit */
+    .hero-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      will-change: width, height, border-radius;
+    }
+    .hero-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      pointer-events: none;
+    }
+    .hero-card-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(26,16,8,0.85) 0%,
-        rgba(26,16,8,0.3) 50%,
-        rgba(26,16,8,0.1) 100%
-      );
+      background: linear-gradient(to top, rgba(26,16,8,0.75) 0%, rgba(26,16,8,0.1) 60%);
     }
-    .hero-content {
-      position: relative; z-index: 1;
-      padding: 5rem 5rem;
-      max-width: 750px;
+
+    /* titre qui s'écarte */
+    .hero-title-wrap {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; width: 100%; pointer-events: none; z-index: 10;
     }
+    .hero-word {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-weight: 400;
+      font-size: clamp(5rem, 12vw, 10rem);
+      color: #fff; line-height: 1;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+      will-change: transform;
+      white-space: nowrap;
+    }
+
+    /* sous-titre + CTA qui apparaissent à la fin */
+    .hero-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      z-index: 20; padding: 4rem 5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    .hero-bottom.visible { opacity: 1; pointer-events: auto; }
     .hero-tag {
       display: inline-block;
       background: var(--rouge);
       color: #fff; font-size: 0.72rem;
       letter-spacing: 3px; text-transform: uppercase;
-      padding: 0.4rem 1rem; margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(4rem, 10vw, 8rem);
-      font-style: italic; font-weight: 400;
-      color: #fff; line-height: 0.95;
-      margin-bottom: 1.5rem;
+      padding: 0.4rem 1rem; margin-bottom: 1.2rem;
     }
     .hero-desc {
       font-size: 1rem; font-weight: 300;
       color: rgba(255,255,255,0.75);
-      line-height: 1.7; margin-bottom: 2.5rem;
+      line-height: 1.7; margin-bottom: 2rem;
       max-width: 460px;
     }
     .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* hint scroll */
+    .hero-hint {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      transition: opacity 0.4s; z-index: 20;
+    }
+    .hero-hint-arrow {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+      animation: arrowPulse 1.5s ease infinite;
+    }
+    @keyframes arrowPulse {
+      0%,100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
 
     /* ── BUTTONS ── */
     .btn {
@@ -402,17 +451,32 @@
   <a href="tel:+33145272493" class="nav-tel">01 45 27 24 93</a>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg" id="heroBg" style="background-image:url('facade.jpg');"></div>
-  <div class="hero-content">
+<!-- HERO SCROLL EXPANSION -->
+<div class="hero-expand-wrap" id="heroWrap">
+  <div class="hero-bg-blur" id="heroBgBlur"></div>
+
+  <div class="hero-card" id="heroCard">
+    <img src="facade.jpg" alt="Anita restaurant" id="heroImg" />
+    <div class="hero-card-overlay" id="heroOverlay"></div>
+  </div>
+
+  <div class="hero-title-wrap" id="heroTitleWrap">
+    <span class="hero-word" id="heroWord1">Ani</span>
+    <span class="hero-word" id="heroWord2">ta</span>
+  </div>
+
+  <div class="hero-bottom" id="heroBottom">
     <span class="hero-tag">Restaurant Italien · Paris 16<sup>e</sup></span>
-    <h1>Anita</h1>
     <p class="hero-desc">Pizzas au feu de bois, pâtes fraîches, vins italiens — une trattoria chaleureuse en bord de Seine, quai Louis Blériot.</p>
     <div class="hero-ctas">
       <a href="#menu" class="btn btn-primary">Découvrir la carte</a>
       <a href="#reservation" class="btn btn-outline">Réserver</a>
     </div>
+  </div>
+
+  <div class="hero-hint" id="heroHint">
+    <span>Scroll</span>
+    <div class="hero-hint-arrow"></div>
   </div>
 </div>
 
@@ -739,11 +803,98 @@
     nav.classList.toggle('scrolled', window.scrollY > 60);
   });
 
-  // Parallax hero
-  const heroBg = document.getElementById('heroBg');
-  window.addEventListener('scroll', () => {
-    heroBg.style.transform = `scale(1.05) translateY(${window.scrollY * 0.25}px)`;
-  });
+  // ── HERO SCROLL EXPANSION ──
+  const heroWrap   = document.getElementById('heroWrap');
+  const heroCard   = document.getElementById('heroCard');
+  const heroBgBlur = document.getElementById('heroBgBlur');
+  const heroOverlay= document.getElementById('heroOverlay');
+  const heroWord1  = document.getElementById('heroWord1');
+  const heroWord2  = document.getElementById('heroWord2');
+  const heroBottom = document.getElementById('heroBottom');
+  const heroHint   = document.getElementById('heroHint');
+
+  let progress = 0;       // 0 → 1
+  let expanded = false;   // true = hero plein écran, scroll normal
+  let touchY = 0;
+
+  function applyProgress(p) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const isMobile = vw < 768;
+
+    // Dimensions carte : départ petit → plein écran
+    const startW = isMobile ? 260 : 380;
+    const startH = isMobile ? 360 : 520;
+    const w = startW + p * (vw - startW);
+    const h = startH + p * (vh - startH);
+    const br = 16 * (1 - p);
+
+    heroCard.style.width  = w + 'px';
+    heroCard.style.height = h + 'px';
+    heroCard.style.borderRadius = br + 'px';
+    heroCard.style.boxShadow = `0 ${30*(1-p)}px ${80*(1-p)}px rgba(0,0,0,${0.6*(1-p)})`;
+
+    // Fond flou disparaît
+    heroBgBlur.style.opacity = 1 - p;
+
+    // Overlay s'éclaircit
+    heroOverlay.style.opacity = 0.3 + p * 0.5;
+
+    // Titre s'écarte
+    const spread = isMobile ? p * 28 : p * 22;
+    heroWord1.style.transform = `translateX(-${spread}vw)`;
+    heroWord2.style.transform = `translateX(${spread}vw)`;
+    heroWord1.style.opacity = p < 0.85 ? 1 : 1 - (p - 0.85) / 0.15;
+    heroWord2.style.opacity = heroWord1.style.opacity;
+
+    // Hint disparaît
+    heroHint.style.opacity = 1 - p * 3;
+
+    // CTA apparaît en fin
+    if (p >= 0.92) {
+      heroBottom.classList.add('visible');
+    } else {
+      heroBottom.classList.remove('visible');
+    }
+  }
+
+  function addProgress(delta) {
+    if (expanded) return;
+    progress = Math.min(1, Math.max(0, progress + delta));
+    applyProgress(progress);
+    if (progress >= 1) {
+      expanded = true;
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Init
+  applyProgress(0);
+  document.body.style.overflow = 'hidden';
+
+  // Wheel
+  window.addEventListener('wheel', (e) => {
+    if (!expanded) {
+      e.preventDefault();
+      addProgress(e.deltaY * 0.001);
+    } else if (window.scrollY === 0 && e.deltaY < 0) {
+      // remonter dans l'expansion
+      expanded = false;
+      document.body.style.overflow = 'hidden';
+      addProgress(e.deltaY * 0.001);
+    }
+  }, { passive: false });
+
+  // Touch
+  window.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!expanded) {
+      e.preventDefault();
+      const dy = touchY - e.touches[0].clientY;
+      touchY = e.touches[0].clientY;
+      addProgress(dy * 0.004);
+    }
+  }, { passive: false });
 
   // Tabs menu
   function showTab(id, btn) {
