@@ -166,8 +166,23 @@
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.5rem, 5vw, 4rem);
       font-weight: 400; line-height: 1.15; margin-bottom: 1.8rem;
+      position: relative;
+      /* clip-path reveal: overridden by [data-animate] when applicable */
     }
     .section-title em { font-style: italic; color: var(--accent); }
+
+    /* 6 ── Horizontal line that grows under .section-title */
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      margin-top: 0.9rem;
+      transition: width 0.7s var(--spring) 0.45s;
+    }
+    .section-title.in::after { width: 40px; }
+
     .about-text {
       color: var(--text-muted); line-height: 1.88;
       font-weight: 300; font-size: 0.96rem; margin-bottom: 1rem;
@@ -185,12 +200,47 @@
       font-size: 0.68rem; letter-spacing: 0.15em;
       text-transform: uppercase; color: var(--text-muted);
     }
+
+    /* 3 ── Parallax on about image */
     .about-img-wrap {
       overflow: hidden; border-radius: var(--radius-sm);
       transition: transform 0.6s var(--spring);
+      will-change: transform;
     }
     .about-img-wrap:hover { transform: rotate(-1.5deg) scale(1.01); }
-    .about-img-wrap img { width: 100%; height: 520px; object-fit: cover; display: block; }
+    .about-img-wrap img {
+      width: 100%; height: 520px; object-fit: cover; display: block;
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+
+    /* ── MARQUEE TICKER ── */
+    .marquee-band {
+      width: 100%;
+      overflow: hidden;
+      background: rgba(139, 92, 246, 0.10);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 0;
+      user-select: none;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 22s linear infinite;
+    }
+    .marquee-track span {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+      padding: 0 3rem;
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
 
     /* ── SERVICES ── */
     #services {
@@ -203,7 +253,6 @@
       display: flex; align-items: baseline; gap: 0.8rem;
       padding: 1.6rem 0; border-bottom: 1px solid var(--border);
       position: relative; cursor: default;
-      transition: transform 0.3s var(--spring);
     }
     .service-item::before {
       content: ''; position: absolute; left: -2rem; top: 0; bottom: 0;
@@ -211,8 +260,12 @@
       transform: scaleY(0); transform-origin: center;
       transition: transform 0.3s var(--spring);
     }
-    .service-item:hover { transform: translateX(12px); }
     .service-item:hover::before { transform: scaleY(1); }
+    /* hover translateX is applied via JS inline after stagger animation settles */
+    .service-item.stagger-done {
+      transition: transform 0.3s var(--spring);
+    }
+    .service-item.stagger-done:hover { transform: translateX(12px); }
     .service-num {
       font-family: 'Playfair Display', serif;
       font-size: 3.5rem; font-weight: 200;
@@ -231,6 +284,16 @@
       color: var(--accent2); flex-shrink: 0;
     }
 
+    /* 4 ── Service stagger initial state */
+    .service-item[data-stagger] {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    .service-item[data-stagger].in {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
     /* ── GALERIE ── */
     #galerie {
       padding: 10rem 6%; background: var(--bg);
@@ -242,7 +305,10 @@
     }
     .gallery-col { display: flex; flex-direction: column; gap: 10px; }
     .gallery-col:nth-child(3) { margin-top: 3rem; }
-    .gallery-item { position: relative; overflow: hidden; border-radius: var(--radius-sm); cursor: pointer; }
+    .gallery-item {
+      position: relative; overflow: hidden;
+      border-radius: var(--radius-sm); cursor: pointer;
+    }
     .gallery-item img { width: 100%; display: block; object-fit: cover; transition: transform 0.6s var(--spring); }
     .gallery-col:nth-child(1) .gallery-item img { height: 440px; }
     .gallery-col:nth-child(2) .gallery-item:nth-child(1) img { height: 210px; }
@@ -259,6 +325,17 @@
     }
     .gallery-item:hover img { transform: scale(1.06); }
     .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    /* 7 ── Gallery stagger initial state */
+    .gallery-item[data-gstagger] {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.7s var(--spring), transform 0.7s var(--spring);
+    }
+    .gallery-item[data-gstagger].in {
+      opacity: 1;
+      transform: scale(1);
+    }
 
     /* Lightbox */
     #lightbox {
@@ -367,6 +444,17 @@
     }
     .btn-send:hover { background: #7c3aed; transform: translateY(-2px); }
 
+    /* 8 ── Contact form field stagger */
+    .fg[data-fstagger] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s var(--spring), transform 0.6s var(--spring);
+    }
+    .fg[data-fstagger].in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ── MAP ── */
     .map-section { height: 440px; position: relative; border-top: 1px solid var(--border); }
     .map-section iframe {
@@ -400,7 +488,18 @@
     .f-links a:hover { color: var(--text); }
     .f-copy { font-size: 0.72rem; color: var(--text-muted); }
 
-    /* ── ANIMATE ── */
+    /* ── BASE ANIMATE ── */
+    /* 2 ── clip-path reveal for section titles */
+    .section-title[data-animate] {
+      clip-path: inset(0 100% 0 0);
+      opacity: 1 !important;           /* override the generic opacity:0 rule */
+      transform: none !important;      /* override generic translateY */
+      transition: clip-path 0.9s var(--spring);
+    }
+    .section-title[data-animate].in {
+      clip-path: inset(0 0% 0 0);
+    }
+
     [data-animate] {
       opacity: 0; transform: translateY(40px);
       transition: opacity 0.8s var(--spring), transform 0.8s var(--spring);
@@ -480,29 +579,41 @@
     <div class="about-grid">
       <div data-animate="left">
         <span class="section-label">Le Salon</span>
-        <h2 class="section-title">L'art du rasage,<br><em>élevé au rang</em><br>de rituel.</h2>
+        <h2 class="section-title" data-animate>L'art du rasage,<br><em>élevé au rang</em><br>de rituel.</h2>
         <p class="about-text">Au cœur du 11<sup>e</sup> arrondissement, Le Rasoir d'Or perpétue la tradition du barbier classique avec une précision contemporaine. Chaque passage devient une expérience sensorielle complète.</p>
         <p class="about-text">Nos maîtres-barbiers maîtrisent les techniques traditionnelles — rasage au coupe-chou, soins de la barbe, coupes précises — dans un cadre confidentiel et soigné.</p>
         <div class="about-stats">
           <div>
-            <span class="stat-val">8+</span>
+            <span class="stat-val" data-counter="8" data-suffix="+">0</span>
             <span class="stat-key">Ans d'expérience</span>
           </div>
           <div>
-            <span class="stat-val">★ 4.9</span>
+            <span class="stat-val" data-counter="4.9" data-prefix="★ ">0</span>
             <span class="stat-key">Avis Google</span>
           </div>
           <div>
-            <span class="stat-val">500+</span>
+            <span class="stat-val" data-counter="500" data-suffix="+">0</span>
             <span class="stat-key">Clients fidèles</span>
           </div>
         </div>
       </div>
-      <div class="about-img-wrap" data-animate="right">
-        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=800&q=85" alt="Intérieur salon">
+      <div class="about-img-wrap" data-animate="right" id="aboutImgWrap">
+        <img id="aboutImg" src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=800&q=85" alt="Intérieur salon">
       </div>
     </div>
   </section>
+
+  <!-- 5 ── MARQUEE TICKER between About and Services -->
+  <div class="marquee-band" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+      <span>Le Rasoir d'Or · Barber Shop · Paris 11e · Depuis 2016 ·</span>
+    </div>
+  </div>
 
   <!-- SERVICES -->
   <section id="services">
@@ -511,25 +622,25 @@
       <h2 class="section-title" data-animate>Nos <em>services</em></h2>
     </div>
     <div class="services-list">
-      <div class="service-item" data-animate>
+      <div class="service-item" data-stagger>
         <span class="service-num">01</span>
         <span class="service-name">Coupe Classique</span>
         <span class="service-dots"></span>
         <span class="service-price">30 €</span>
       </div>
-      <div class="service-item" data-animate>
+      <div class="service-item" data-stagger>
         <span class="service-num">02</span>
         <span class="service-name">Soin Barbe</span>
         <span class="service-dots"></span>
         <span class="service-price">25 €</span>
       </div>
-      <div class="service-item" data-animate>
+      <div class="service-item" data-stagger>
         <span class="service-num">03</span>
         <span class="service-name">Rasage Traditionnel</span>
         <span class="service-dots"></span>
         <span class="service-price">35 €</span>
       </div>
-      <div class="service-item" data-animate>
+      <div class="service-item" data-stagger>
         <span class="service-num">04</span>
         <span class="service-name">Coupe + Barbe</span>
         <span class="service-dots"></span>
@@ -546,23 +657,23 @@
     </div>
     <div class="gallery-grid">
       <div class="gallery-col">
-        <div class="gallery-item" onclick="openLb(this)">
+        <div class="gallery-item" data-gstagger onclick="openLb(this)">
           <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=800&q=85" alt="">
           <div class="gallery-overlay"><span>Voir</span></div>
         </div>
       </div>
       <div class="gallery-col">
-        <div class="gallery-item" onclick="openLb(this)">
+        <div class="gallery-item" data-gstagger onclick="openLb(this)">
           <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=800&q=85" alt="">
           <div class="gallery-overlay"><span>Voir</span></div>
         </div>
-        <div class="gallery-item" onclick="openLb(this)">
+        <div class="gallery-item" data-gstagger onclick="openLb(this)">
           <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=85" alt="">
           <div class="gallery-overlay"><span>Voir</span></div>
         </div>
       </div>
       <div class="gallery-col">
-        <div class="gallery-item" onclick="openLb(this)">
+        <div class="gallery-item" data-gstagger onclick="openLb(this)">
           <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=85" alt="">
           <div class="gallery-overlay"><span>Voir</span></div>
         </div>
@@ -609,10 +720,10 @@
         </div>
       </div>
       <div data-animate="right">
-        <form onsubmit="sendForm(event)">
-          <div class="fg"><label>Nom complet</label><input type="text" placeholder="Jean Dupont" required></div>
-          <div class="fg"><label>Téléphone</label><input type="tel" placeholder="06 00 00 00 00" required></div>
-          <div class="fg">
+        <form id="contactForm" onsubmit="sendForm(event)">
+          <div class="fg" data-fstagger><label>Nom complet</label><input type="text" placeholder="Jean Dupont" required></div>
+          <div class="fg" data-fstagger><label>Téléphone</label><input type="tel" placeholder="06 00 00 00 00" required></div>
+          <div class="fg" data-fstagger>
             <label>Prestation</label>
             <select>
               <option>Coupe Classique — 30€</option>
@@ -621,7 +732,7 @@
               <option>Coupe + Barbe — 55€</option>
             </select>
           </div>
-          <div class="fg"><label>Message</label><textarea placeholder="Créneau souhaité, demande particulière…"></textarea></div>
+          <div class="fg" data-fstagger><label>Message</label><textarea placeholder="Créneau souhaité, demande particulière…"></textarea></div>
           <button type="submit" class="btn-send">Envoyer →</button>
         </form>
       </div>
@@ -661,14 +772,14 @@
   function closeMob() { document.getElementById('mob').classList.remove('open'); }
 
   // HERO
-  const heroEl  = document.getElementById('hero');
+  const heroEl    = document.getElementById('hero');
   const heroMedia = document.getElementById('heroMedia');
-  const heroBg  = document.getElementById('heroBg');
-  const wL = document.getElementById('wL');
-  const wR = document.getElementById('wR');
-  const hSub  = document.getElementById('hSub');
-  const hHint = document.getElementById('hHint');
-  const content = document.getElementById('content');
+  const heroBg    = document.getElementById('heroBg');
+  const wL        = document.getElementById('wL');
+  const wR        = document.getElementById('wR');
+  const hSub      = document.getElementById('hSub');
+  const hHint     = document.getElementById('hHint');
+  const content   = document.getElementById('content');
 
   let prog = 0, expanded = false;
   document.body.style.overflow = 'hidden';
@@ -763,18 +874,123 @@
     e.target.reset();
   }
 
-  // INTERSECTION OBSERVER
-  const io = new IntersectionObserver(entries => {
+  // ── 1 ── STATS COUNTER ANIMATION
+  function animateCounter(el) {
+    const target  = parseFloat(el.dataset.counter);
+    const suffix  = el.dataset.suffix || '';
+    const prefix  = el.dataset.prefix || '';
+    const isFloat = target % 1 !== 0;
+    const duration = 1400; // ms
+    const steps    = 60;
+    const interval = duration / steps;
+    let current = 0;
+    const increment = target / steps;
+    const timer = setInterval(() => {
+      current = Math.min(current + increment, target);
+      el.textContent = prefix + (isFloat ? current.toFixed(1) : Math.floor(current)) + suffix;
+      if (current >= target) clearInterval(timer);
+    }, interval);
+  }
+
+  // ── 3 ── PARALLAX ON ABOUT IMAGE
+  const aboutImg     = document.getElementById('aboutImg');
+  const aboutImgWrap = document.getElementById('aboutImgWrap');
+  let wrapTop = 0;
+
+  function updateParallax() {
+    if (!aboutImg) return;
+    const rect   = aboutImgWrap.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const vh     = window.innerHeight;
+    const offset = (center - vh / 2) * 0.3;
+    aboutImg.style.transform = `translateY(${offset}px)`;
+  }
+  window.addEventListener('scroll', updateParallax, { passive: true });
+
+  // ── INTERSECTION OBSERVER (generic [data-animate]) ──
+  const ioGeneric = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const idx = [...(entry.target.parentElement?.children || [])].indexOf(entry.target);
-        entry.target.style.transitionDelay = (idx * 90) + 'ms';
-        entry.target.classList.add('in');
+        const el = entry.target;
+        const idx = [...(el.parentElement?.children || [])].indexOf(el);
+        el.style.transitionDelay = (idx * 90) + 'ms';
+        el.classList.add('in');
+        ioGeneric.unobserve(el);
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-  document.querySelectorAll('[data-animate]').forEach(el => io.observe(el));
+  document.querySelectorAll('[data-animate]').forEach(el => ioGeneric.observe(el));
+
+  // ── COUNTER OBSERVER ──
+  const statsEl = document.querySelectorAll('[data-counter]');
+  const ioStats = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        ioStats.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  statsEl.forEach(el => ioStats.observe(el));
+
+  // ── 4 ── SERVICE ITEMS STAGGER ──
+  const serviceItems = document.querySelectorAll('.service-item[data-stagger]');
+  const ioService = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const items = entry.target.closest('.services-list').querySelectorAll('.service-item[data-stagger]');
+        items.forEach((item, i) => {
+          setTimeout(() => {
+            item.style.transition = `opacity 0.7s var(--spring), transform 0.7s var(--spring)`;
+            item.classList.add('in');
+            // enable hover effect after animation settles
+            setTimeout(() => item.classList.add('stagger-done'), 750);
+          }, i * 100);
+          ioService.unobserve(item);
+        });
+        ioService.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  // observe only the first service item to trigger the whole group
+  if (serviceItems.length) ioService.observe(serviceItems[0]);
+
+  // ── 7 ── GALLERY STAGGER ──
+  const galleryItems = document.querySelectorAll('.gallery-item[data-gstagger]');
+  let galleryTriggered = false;
+  const ioGallery = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !galleryTriggered) {
+        galleryTriggered = true;
+        galleryItems.forEach((item, i) => {
+          setTimeout(() => {
+            item.classList.add('in');
+          }, i * 120);
+          ioGallery.unobserve(item);
+        });
+      }
+    });
+  }, { threshold: 0.08 });
+  if (galleryItems.length) ioGallery.observe(galleryItems[0]);
+
+  // ── 8 ── CONTACT FORM FIELDS STAGGER ──
+  const formFields = document.querySelectorAll('.fg[data-fstagger]');
+  let formTriggered = false;
+  const ioForm = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !formTriggered) {
+        formTriggered = true;
+        formFields.forEach((fg, i) => {
+          setTimeout(() => {
+            fg.classList.add('in');
+          }, i * 80);
+          ioForm.unobserve(fg);
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+  if (formFields.length) ioForm.observe(formFields[0]);
 </script>
 </body>
 </html>
