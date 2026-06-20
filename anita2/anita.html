@@ -445,6 +445,16 @@
       .f-links { flex-wrap: wrap; justify-content: center; }
       .about-stats { gap: 1.5rem; flex-wrap: wrap; }
       .menu-tabs { flex-wrap: wrap; }
+      #about, #menu, #galerie, #horaires, #reservation { padding: 5rem 5%; }
+      .section-title { font-size: clamp(2rem, 8vw, 3rem); }
+      .about-img-wrap img { height: 320px; }
+      .hero-word { font-size: clamp(3.5rem, 18vw, 6rem); }
+      .hero-sub, .hero-hint { font-size: 0.6rem; bottom: 10%; }
+      .service-item { padding: 0.9rem 0; }
+      .svc-num { font-size: 2.5rem; }
+      .horaire-row { font-size: 0.85rem; padding: 0.8rem 0; }
+      .map-card { left: 1rem; right: 1rem; bottom: 1rem; }
+      .resa-info { border-right: none; padding-right: 0; }
     }
   </style>
 </head>
@@ -476,7 +486,7 @@
 <section id="hero">
   <div class="hero-bg-blur" id="heroBg"></div>
   <div class="hero-media-wrap" id="heroMedia">
-    <img class="hero-media-img" src="facade.jpg" alt="Anita">
+    <img class="hero-media-img" src="facade.jpg" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'" alt="Anita">
     <div class="hero-media-overlay"></div>
   </div>
   <div class="hero-title-wrap">
@@ -755,19 +765,39 @@
   }
 
   applyProg(0);
-  window.addEventListener('wheel', e => {
-    if (!expanded) { e.preventDefault(); move(e.deltaY * 0.001); }
-    else if (window.scrollY === 0 && e.deltaY < 0) {
-      expanded = false; document.body.style.overflow = 'hidden';
-      heroEl.style.position = 'fixed'; move(e.deltaY * 0.001);
-    }
-  }, { passive: false });
 
-  let ty = 0;
-  window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchmove', e => {
-    if (!expanded) { e.preventDefault(); const d = ty - e.touches[0].clientY; ty = e.touches[0].clientY; move(d * 0.004); }
-  }, { passive: false });
+  const isMobile = window.matchMedia('(max-width: 800px)').matches || ('ontouchstart' in window && window.innerWidth < 800);
+
+  if (isMobile) {
+    // Sur mobile : expand automatique après 1.2s avec animation fluide
+    heroEl.style.transition = 'none';
+    heroMedia.style.transition = 'width 1.1s cubic-bezier(0.16,1,0.3,1), height 1.1s cubic-bezier(0.16,1,0.3,1), border-radius 1.1s cubic-bezier(0.16,1,0.3,1)';
+    setTimeout(() => {
+      let start = null;
+      function animExpand(ts) {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / 1100, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        move(ease * 0.02);
+        if (prog < 1) requestAnimationFrame(animExpand);
+      }
+      requestAnimationFrame(animExpand);
+    }, 800);
+  } else {
+    window.addEventListener('wheel', e => {
+      if (!expanded) { e.preventDefault(); move(e.deltaY * 0.001); }
+      else if (window.scrollY === 0 && e.deltaY < 0) {
+        expanded = false; document.body.style.overflow = 'hidden';
+        heroEl.style.position = 'fixed'; move(e.deltaY * 0.001);
+      }
+    }, { passive: false });
+
+    let ty = 0;
+    window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchmove', e => {
+      if (!expanded) { e.preventDefault(); const d = ty - e.touches[0].clientY; ty = e.touches[0].clientY; move(d * 0.008); }
+    }, { passive: false });
+  }
 
   // MENU TABS
   function showTab(id, btn) {
