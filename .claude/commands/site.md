@@ -258,7 +258,7 @@ window.addEventListener('touchmove', e => {
 
 ---
 
-## Étape 5 — Animations (spring physics)
+## Étape 5 — Animations (spring physics + scroll)
 
 ```css
 --spring: cubic-bezier(0.16, 1, 0.3, 1);
@@ -272,7 +272,7 @@ const observer = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       const idx = [...entry.target.parentElement.children].indexOf(entry.target);
       entry.target.style.transitionDelay = (idx * 90) + 'ms';
-      entry.target.classList.add('in-view');
+      entry.target.classList.add('in');
     }
   });
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
@@ -282,10 +282,99 @@ document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 
 ```css
 [data-animate] { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--spring), transform 0.8s var(--spring); }
-[data-animate].in-view { opacity: 1; transform: none; }
+[data-animate].in { opacity: 1; transform: none; }
 [data-animate="left"] { transform: translateX(-40px); }
 [data-animate="right"] { transform: translateX(40px); }
-[data-animate="scale"] { transform: scale(0.95); }
+[data-animate="scale"] { transform: scale(0.95); opacity: 0; }
+```
+
+### Animations supplémentaires OBLIGATOIRES après le hero
+
+**A. Clip-path reveal sur les titres de section :**
+```css
+.section-title[data-animate] {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.9s var(--spring), opacity 0.5s var(--smooth);
+}
+.section-title[data-animate].in { clip-path: inset(0 0% 0 0); opacity: 1; }
+/* Trait accent qui grandit sous chaque titre */
+.section-title::after {
+  content: ''; display: block; width: 0; height: 1px;
+  background: var(--accent); margin-top: 0.9rem;
+  transition: width 0.7s var(--spring) 0.45s;
+}
+.section-title.in::after { width: 40px; }
+```
+
+**B. Marquee / bandeau défilant** entre About et Services :
+```html
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>NOM · TYPE · VILLE · DEPUIS XXXX · &nbsp;&nbsp;&nbsp;</span>
+    <!-- répété 4× -->
+  </div>
+</div>
+```
+```css
+.marquee-wrap { overflow: hidden; padding: 1.2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(ACCENT_RGB, 0.08); }
+.marquee-track { display: flex; width: max-content; animation: marquee 24s linear infinite; font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+```
+
+**C. Stats counter animation** :
+```html
+<span class="stat-val" data-counter="8" data-suffix="+">0+</span>
+<span class="stat-val" data-counter="4.9" data-decimal="1">0</span>
+<span class="stat-val" data-counter="500" data-suffix="+">0+</span>
+```
+```javascript
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.counter);
+  const suffix = el.dataset.suffix || '';
+  const decimals = parseInt(el.dataset.decimal || '0');
+  const start = performance.now();
+  const tick = (now) => {
+    const p = Math.min((now - start) / 1800, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = (target * ease).toFixed(decimals) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+// Déclencher via IntersectionObserver sur .about-stats
+```
+
+**D. Service items stagger** (slide depuis la gauche, 100ms entre chaque) :
+```css
+.service-item[data-stagger] { opacity: 0; transform: translateX(-30px); transition: opacity 0.6s var(--spring), transform 0.6s var(--spring); }
+.service-item[data-stagger].stagger-in { opacity: 1; transform: translateX(0); }
+.service-item.stagger-done { transition: transform 0.3s var(--spring); }
+```
+
+**E. Galerie stagger** (scale depuis 0.92, 120ms entre chaque) :
+```css
+.gallery-item[data-gstagger] { opacity: 0; transform: scale(0.92); transition: opacity 0.6s var(--spring), transform 0.6s var(--spring); }
+.gallery-item[data-gstagger].in { opacity: 1; transform: scale(1); }
+```
+
+**F. Formulaire stagger** (fields depuis le bas, 80ms entre chaque) :
+```css
+.fg[data-fstagger] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s var(--spring), transform 0.5s var(--spring); }
+.fg[data-fstagger].in { opacity: 1; transform: none; }
+```
+
+**G. Parallax image About** :
+```javascript
+window.addEventListener('scroll', () => {
+  const wrap = document.querySelector('.about-img-wrap');
+  if (!wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  wrap.querySelector('img').style.transform = `translateY(${(rect.top / window.innerHeight) * 40}px)`;
+});
+```
+```css
+.about-img-wrap { overflow: hidden; }
+.about-img-wrap img { will-change: transform; transition: none; }
 ```
 
 ---
