@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anita — Restaurant Italien Paris 16</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0e0806;
+      --bg2:        #160d09;
+      --accent:     #C8392B;
+      --accent2:    #E8753A;
+      --text:       #FAF6EE;
+      --text-muted: rgba(250,246,238,0.45);
+      --border:     rgba(255,255,255,0.06);
+      --card-bg:    rgba(255,255,255,0.03);
+      --radius-sm:  4px;
+      --radius:     8px;
+      --radius-lg:  16px;
+      --spring:     cubic-bezier(0.16, 1, 0.3, 1);
+      --snap:       cubic-bezier(0.76, 0, 0.24, 1);
+      --smooth:     cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* Grain */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      z-index: 9999; pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.6rem 6%;
+      transition: background 0.4s var(--smooth), padding 0.4s var(--smooth), border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(14,8,6,0.9);
+      backdrop-filter: blur(24px);
+      padding: 1rem 6%;
+      border-bottom-color: var(--border);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none;
+      font-size: 0.78rem; font-weight: 300; letter-spacing: 0.08em;
+      position: relative; transition: color 0.2s var(--snap);
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s var(--spring);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-tel {
+      font-size: 0.78rem; font-weight: 400;
+      color: var(--accent2); text-decoration: none;
+      letter-spacing: 0.05em; transition: color 0.2s;
+    }
+    .nav-tel:hover { color: var(--text); }
+    .burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .burger span { display: block; width: 22px; height: 1px; background: var(--text); transition: all 0.3s var(--spring); }
+
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 199;
+      background: var(--bg); flex-direction: column;
+      align-items: center; justify-content: center; gap: 3rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Playfair Display', serif; font-size: 2.5rem;
+      font-style: italic; color: var(--text); text-decoration: none;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s var(--spring), transform 0.5s var(--spring);
+    }
+    .mobile-menu.open a { opacity: 1; transform: none; }
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.12s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.19s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.26s; }
+    .mobile-menu.open a:nth-child(5) { transition-delay: 0.33s; }
+
+    /* ── HERO ── */
+    #hero {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; z-index: 10; background: var(--bg);
+    }
+    .hero-bg-blur {
+      position: absolute; inset: 0;
+      background-image: url('facade.jpg');
+      background-size: cover; background-position: center;
+      filter: blur(60px) brightness(0.25); transform: scale(1.1); z-index: 0;
+    }
+    .hero-media-wrap {
+      position: absolute; width: 320px; height: 420px;
+      border-radius: 20px; overflow: hidden; z-index: 1;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    }
+    .hero-media-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-media-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(14,8,6,0.7) 0%, transparent 55%);
+    }
+    .hero-title-wrap {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.08em; z-index: 2; pointer-events: none;
+    }
+    .hero-word {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(5rem, 13vw, 11rem);
+      font-weight: 900; color: var(--text);
+      mix-blend-mode: difference; will-change: transform;
+      line-height: 1; letter-spacing: -0.02em;
+    }
+    .hero-sub, .hero-hint {
+      position: absolute; bottom: 14%;
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      z-index: 3; will-change: transform;
+    }
+    .hero-sub { left: 6%; }
+    .hero-hint { right: 6%; }
+
+    /* ── CONTENT ── */
+    #content {
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.9s var(--smooth);
+      position: relative; z-index: 1; margin-top: 100vh;
+    }
+
+    /* ── ABOUT ── */
+    #about { padding: 10rem 6%; background: var(--bg); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; max-width: 1200px; margin: 0 auto; align-items: center;
+    }
+    .section-label {
+      display: block; font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      font-weight: 300; margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400; line-height: 1.15; margin-bottom: 1.8rem;
+      position: relative;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+    .section-title[data-animate] {
+      clip-path: inset(0 100% 0 0);
+      opacity: 1;
+      transition: clip-path 0.9s var(--spring);
+    }
+    .section-title[data-animate].in { clip-path: inset(0 0% 0 0); }
+    .section-title::after {
+      content: ''; display: block; width: 0; height: 1px;
+      background: var(--accent); margin-top: 0.9rem;
+      transition: width 0.7s var(--spring) 0.45s;
+    }
+    .section-title.in::after { width: 40px; }
+
+    .about-text {
+      color: var(--text-muted); line-height: 1.88;
+      font-weight: 300; font-size: 0.96rem; margin-bottom: 1rem;
+    }
+    .about-stats {
+      display: flex; gap: 3rem; margin-top: 2.5rem;
+      padding-top: 2rem; border-top: 1px solid var(--border);
+    }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-style: italic;
+      color: var(--accent2); display: block;
+    }
+    .stat-key {
+      font-size: 0.68rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .about-img-wrap {
+      overflow: hidden; border-radius: var(--radius-sm);
+      transition: transform 0.6s var(--spring);
+    }
+    .about-img-wrap:hover { transform: rotate(-1.5deg) scale(1.01); }
+    .about-img-wrap img { width: 100%; height: 520px; object-fit: cover; display: block; will-change: transform; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      overflow: hidden; padding: 1.2rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(200,57,43,0.07);
+    }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 28s linear infinite;
+      font-size: 0.78rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      font-weight: 300;
+    }
+    .marquee-track span { padding-right: 3rem; white-space: nowrap; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── MENU ── */
+    #menu { padding: 10rem 6%; background: var(--bg2); }
+    .menu-tabs {
+      display: flex; justify-content: center; gap: 0;
+      margin: 3rem 0 4rem; border: 1px solid var(--border);
+      width: fit-content; margin-left: auto; margin-right: auto;
+    }
+    .tab-btn {
+      background: none; border: none; color: var(--text-muted);
+      font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.9rem 1.8rem; cursor: pointer;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s var(--snap), color 0.2s;
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { background: var(--accent); color: #fff; }
+    .tab-btn:hover:not(.active) { color: var(--text); background: var(--card-bg); }
+
+    .menu-panel { display: none; max-width: 820px; margin: 0 auto; }
+    .menu-panel.active { display: block; }
+
+    .menu-item {
+      display: flex; align-items: baseline; gap: 0.8rem;
+      padding: 1.5rem 0; border-bottom: 1px solid var(--border);
+      position: relative;
+      transition: transform 0.3s var(--spring);
+    }
+    .menu-item::before {
+      content: ''; position: absolute; left: -2rem; top: 0; bottom: 0;
+      width: 2px; background: var(--accent);
+      transform: scaleY(0); transform-origin: center;
+      transition: transform 0.3s var(--spring);
+    }
+    .menu-item:hover { transform: translateX(12px); }
+    .menu-item:hover::before { transform: scaleY(1); }
+    .menu-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; font-weight: 200;
+      color: var(--accent); opacity: 0.3; line-height: 1;
+      min-width: 70px; transition: opacity 0.3s;
+    }
+    .menu-item:hover .menu-num { opacity: 0.7; }
+    .menu-info { flex: 1; }
+    .menu-name { font-size: 1rem; font-weight: 400; color: var(--text); }
+    .menu-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; font-weight: 300; }
+    .menu-dots {
+      flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.1);
+      margin-bottom: 4px; max-width: 80px;
+    }
+    .menu-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-style: italic;
+      color: var(--accent2); flex-shrink: 0;
+    }
+
+    /* ── GALERIE ── */
+    #galerie { padding: 10rem 6%; background: var(--bg); border-top: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .gallery-grid {
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 10px; max-width: 1200px; margin: 0 auto;
+    }
+    .gallery-col { display: flex; flex-direction: column; gap: 10px; }
+    .gallery-col:nth-child(3) { margin-top: 3rem; }
+    .gallery-item {
+      position: relative; overflow: hidden;
+      border-radius: var(--radius-sm); cursor: pointer;
+      opacity: 0; transform: scale(0.92);
+      transition: opacity 0.6s var(--spring), transform 0.6s var(--spring);
+    }
+    .gallery-item.in { opacity: 1; transform: scale(1); }
+    .gallery-item img { width: 100%; display: block; object-fit: cover; transition: transform 0.6s var(--spring); }
+    .gallery-col:nth-child(1) .gallery-item img { height: 440px; }
+    .gallery-col:nth-child(2) .gallery-item:nth-child(1) img { height: 210px; }
+    .gallery-col:nth-child(2) .gallery-item:nth-child(2) img { height: 215px; }
+    .gallery-col:nth-child(3) .gallery-item img { height: 300px; }
+    .gallery-overlay {
+      position: absolute; inset: 0; background: rgba(14,8,6,0.5);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s var(--smooth);
+    }
+    .gallery-overlay span { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #fff; }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(0,0,0,0.96);
+      display: none; align-items: center; justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: var(--radius-sm); }
+    #lb-close {
+      position: absolute; top: 1.8rem; right: 2rem;
+      color: rgba(255,255,255,0.5); font-size: 1.8rem;
+      cursor: pointer; background: none; border: none; transition: color 0.2s;
+    }
+    #lb-close:hover { color: #fff; }
+
+    /* ── HORAIRES ── */
+    #horaires { padding: 10rem 6%; background: var(--bg2); border-top: 1px solid var(--border); }
+    .horaires-list { max-width: 580px; margin: 4rem auto 0; }
+    .horaire-line {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.95rem; font-weight: 300;
+    }
+    .horaire-day { color: var(--text-muted); }
+    .horaire-time { color: var(--text); }
+    .horaire-line.today .horaire-day { color: var(--accent); display: flex; align-items: center; gap: 0.6rem; }
+    .horaire-line.today .horaire-time { color: var(--accent2); }
+    .dot-pulse {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+      animation: pulse 1.6s ease infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.7); } }
+
+    /* Badge */
+    #badge {
+      position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 500;
+      padding: 0.45rem 1rem; border-radius: 100px;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+      font-weight: 500; display: flex; align-items: center; gap: 0.5rem;
+    }
+    #badge.open  { background: rgba(232,117,58,0.12); color: var(--accent2); border: 1px solid rgba(232,117,58,0.3); }
+    #badge.closed { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border); }
+    .bdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    #badge.open .bdot { animation: pulse 1.5s ease infinite; }
+
+    /* ── RÉSERVATION ── */
+    #reservation { padding: 10rem 6%; background: var(--bg); border-top: 1px solid var(--border); }
+    .resa-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; max-width: 1100px; margin: 4rem auto 0; align-items: start;
+    }
+    .cinfo-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .cinfo-icon { width: 18px; flex-shrink: 0; color: var(--accent); margin-top: 2px; }
+    .cinfo-label { display: block; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .cinfo-val { font-size: 0.95rem; font-weight: 300; color: var(--text-muted); }
+    .cinfo-val a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .cinfo-val a:hover { color: var(--accent2); }
+
+    .fg {
+      margin-bottom: 2rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s var(--spring), transform 0.5s var(--spring);
+    }
+    .fg.in { opacity: 1; transform: none; }
+    .fg label { display: block; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 300; }
+    .fg input, .fg select, .fg textarea {
+      width: 100%; background: none; border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--text); font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 300;
+      padding: 0.7rem 0; outline: none; border-radius: 0;
+      transition: border-color 0.2s var(--snap);
+    }
+    .fg input:focus, .fg textarea:focus { border-bottom-color: var(--accent); }
+    .fg select { cursor: pointer; }
+    .fg select option { background: var(--bg2); }
+    .fg textarea { resize: none; min-height: 80px; }
+    .btn-send {
+      width: 100%; padding: 1rem;
+      background: var(--accent); color: #fff; border: none;
+      font-family: 'Inter', sans-serif; font-size: 0.8rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; border-radius: var(--radius-sm);
+      transition: background 0.2s var(--snap), transform 0.2s var(--spring);
+    }
+    .btn-send:hover { background: #a82e20; transform: translateY(-2px); }
+
+    /* ── MAP ── */
+    .map-section { height: 440px; position: relative; border-top: 1px solid var(--border); }
+    .map-section iframe { width: 100%; height: 100%; border: none; display: block; filter: grayscale(100%) contrast(1.15) brightness(0.35); }
+    .map-card {
+      position: absolute; bottom: 2rem; left: 2rem;
+      background: rgba(14,8,6,0.9); backdrop-filter: blur(16px);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.2rem 1.5rem; z-index: 10;
+    }
+    .map-card-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: var(--text); }
+    .map-card-addr { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.8rem 6%; background: var(--bg);
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .f-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic; }
+    .f-links { display: flex; gap: 2rem; }
+    .f-links a { font-size: 0.72rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .f-links a:hover { color: var(--text); }
+    .f-copy { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── ANIMATE BASE ── */
+    [data-animate] {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s var(--spring), transform 0.8s var(--spring);
+    }
+    [data-animate].in { opacity: 1; transform: none; }
+    [data-animate="left"]  { transform: translateX(-40px); }
+    [data-animate="right"] { transform: translateX(40px); }
+    [data-animate="scale"] { transform: scale(0.95); opacity: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      .nav-links, .nav-tel { display: none; }
+      .burger { display: flex; }
+      .about-grid, .resa-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-col:nth-child(3) { display: none; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .f-links { flex-wrap: wrap; justify-content: center; }
+      .about-stats { gap: 1.5rem; flex-wrap: wrap; }
+      .menu-tabs { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Anita</div>
+  <ul class="nav-links">
+    <li><a href="#about">Le restaurant</a></li>
+    <li><a href="#menu">La carte</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#reservation">Réservation</a></li>
+  </ul>
+  <a href="tel:+33145272493" class="nav-tel">01 45 27 24 93</a>
+  <button class="burger" id="burger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mob">
+  <a href="#about"       onclick="closeMob()">Le restaurant</a>
+  <a href="#menu"        onclick="closeMob()">La carte</a>
+  <a href="#galerie"     onclick="closeMob()">Galerie</a>
+  <a href="#horaires"    onclick="closeMob()">Horaires</a>
+  <a href="#reservation" onclick="closeMob()">Réservation</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-blur" id="heroBg"></div>
+  <div class="hero-media-wrap" id="heroMedia">
+    <img class="hero-media-img" src="facade.jpg" alt="Anita">
+    <div class="hero-media-overlay"></div>
+  </div>
+  <div class="hero-title-wrap">
+    <h1 class="hero-word" id="wL">Ani</h1>
+    <h1 class="hero-word" id="wR">ta</h1>
+  </div>
+  <p class="hero-sub"  id="hSub">Restaurant Italien · Paris 16<sup>e</sup></p>
+  <p class="hero-hint" id="hHint">↓ Scroll to discover</p>
+</section>
+
+<!-- BADGE -->
+<div id="badge"><span class="bdot"></span><span id="btxt">…</span></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close">✕</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid">
+      <div data-animate="left">
+        <span class="section-label">Le Restaurant</span>
+        <h2 class="section-title" data-animate>Une trattoria<br><em>comme à Rome</em></h2>
+        <p class="about-text">Nichée quai Louis Blériot, à deux pas de la Seine, Anita est bien plus qu'un restaurant — c'est une adresse de quartier où l'on revient. Pour les suspensions orangées, les banquettes en cuir, la chaleur d'une vraie trattoria italienne.</p>
+        <p class="about-text">Les pâtes sont fraîches, les pizzas cuisent au feu de bois, les vins sont choisis avec soin. Le soir en terrasse, c'est l'une des plus belles adresses du 16<sup>e</sup>.</p>
+        <div class="about-stats">
+          <div>
+            <span class="stat-val" data-counter="4.8" data-decimal="1">4.8</span>
+            <span class="stat-key">★ Avis Google</span>
+          </div>
+          <div>
+            <span class="stat-val" data-counter="1900" data-suffix="+">1900+</span>
+            <span class="stat-key">Avis clients</span>
+          </div>
+          <div>
+            <span class="stat-val" data-counter="35" data-prefix="~">~35€</span>
+            <span class="stat-key">Prix moyen</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-img-wrap" data-animate="right">
+        <img src="interieur.jpg" alt="Salle Anita" id="aboutImg">
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Anita · Restaurant Italien · Paris 16<sup style="font-size:0.6em">e</sup> · Quai Louis Blériot · Pizzas au feu de bois · Pâtes fraîches · Terrasse en bord de Seine · &nbsp;&nbsp;&nbsp;</span>
+      <span>Anita · Restaurant Italien · Paris 16<sup style="font-size:0.6em">e</sup> · Quai Louis Blériot · Pizzas au feu de bois · Pâtes fraîches · Terrasse en bord de Seine · &nbsp;&nbsp;&nbsp;</span>
+      <span>Anita · Restaurant Italien · Paris 16<sup style="font-size:0.6em">e</sup> · Quai Louis Blériot · Pizzas au feu de bois · Pâtes fraîches · Terrasse en bord de Seine · &nbsp;&nbsp;&nbsp;</span>
+      <span>Anita · Restaurant Italien · Paris 16<sup style="font-size:0.6em">e</sup> · Quai Louis Blériot · Pizzas au feu de bois · Pâtes fraîches · Terrasse en bord de Seine · &nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="section-header">
+      <span class="section-label" data-animate>La Carte</span>
+      <h2 class="section-title" data-animate>Cuisine <em>italienne</em></h2>
+    </div>
+    <div class="menu-tabs">
+      <button class="tab-btn active" onclick="showTab('antipasti',this)">Antipasti</button>
+      <button class="tab-btn" onclick="showTab('pizzas',this)">Pizzas</button>
+      <button class="tab-btn" onclick="showTab('pates',this)">Pâtes</button>
+      <button class="tab-btn" onclick="showTab('desserts',this)">Desserts</button>
+    </div>
+
+    <div class="menu-panel active" id="antipasti">
+      <div class="menu-item"><span class="menu-num">01</span><div class="menu-info"><div class="menu-name">Burrata</div><div class="menu-desc">Burrata crémeuse, tomates cerises, huile d'olive, basilic</div></div><span class="menu-dots"></span><span class="menu-price">14 €</span></div>
+      <div class="menu-item"><span class="menu-num">02</span><div class="menu-info"><div class="menu-name">Arancini</div><div class="menu-desc">Boulettes de riz frites, cœur fondant mozzarella, roquette</div></div><span class="menu-dots"></span><span class="menu-price">11 €</span></div>
+      <div class="menu-item"><span class="menu-num">03</span><div class="menu-info"><div class="menu-name">Carpaccio de bœuf</div><div class="menu-desc">Bœuf tranché, copeaux de parmesan, roquette, câpres, citron</div></div><span class="menu-dots"></span><span class="menu-price">16 €</span></div>
+      <div class="menu-item"><span class="menu-num">04</span><div class="menu-info"><div class="menu-name">Bruschetta</div><div class="menu-desc">Pain grillé, tomates fraîches, ail, basilic, huile d'olive</div></div><span class="menu-dots"></span><span class="menu-price">8 €</span></div>
+    </div>
+
+    <div class="menu-panel" id="pizzas">
+      <div class="menu-item"><span class="menu-num">01</span><div class="menu-info"><div class="menu-name">Margherita</div><div class="menu-desc">Tomate San Marzano, mozzarella fior di latte, basilic frais</div></div><span class="menu-dots"></span><span class="menu-price">14 €</span></div>
+      <div class="menu-item"><span class="menu-num">02</span><div class="menu-info"><div class="menu-name">Truffe</div><div class="menu-desc">Crème de truffe, mozzarella, champignons, copeaux de truffe noire</div></div><span class="menu-dots"></span><span class="menu-price">22 €</span></div>
+      <div class="menu-item"><span class="menu-num">03</span><div class="menu-info"><div class="menu-name">Calabrese</div><div class="menu-desc">Tomate, nduja, mozzarella, olives, piment doux</div></div><span class="menu-dots"></span><span class="menu-price">17 €</span></div>
+      <div class="menu-item"><span class="menu-num">04</span><div class="menu-info"><div class="menu-name">Salmone</div><div class="menu-desc">Crème fraîche, saumon fumé, câpres, aneth, citron</div></div><span class="menu-dots"></span><span class="menu-price">19 €</span></div>
+    </div>
+
+    <div class="menu-panel" id="pates">
+      <div class="menu-item"><span class="menu-num">01</span><div class="menu-info"><div class="menu-name">Rigatoni all'arrabbiata</div><div class="menu-desc">Sauce tomate épicée, ail, piment calabrese, parmesan</div></div><span class="menu-dots"></span><span class="menu-price">16 €</span></div>
+      <div class="menu-item"><span class="menu-num">02</span><div class="menu-info"><div class="menu-name">Tagliatelles aux truffes</div><div class="menu-desc">Crème de truffe noire, parmesan 24 mois, copeaux de truffe</div></div><span class="menu-dots"></span><span class="menu-price">24 €</span></div>
+      <div class="menu-item"><span class="menu-num">03</span><div class="menu-info"><div class="menu-name">Carbonara</div><div class="menu-desc">Spaghetti, guanciale, pecorino, jaune d'œuf, poivre noir</div></div><span class="menu-dots"></span><span class="menu-price">17 €</span></div>
+      <div class="menu-item"><span class="menu-num">04</span><div class="menu-info"><div class="menu-name">Gnocchi</div><div class="menu-desc">Gnocchi maison, pesto genovese, tomates confites, pignons</div></div><span class="menu-dots"></span><span class="menu-price">15 €</span></div>
+    </div>
+
+    <div class="menu-panel" id="desserts">
+      <div class="menu-item"><span class="menu-num">01</span><div class="menu-info"><div class="menu-name">Tiramisu maison</div><div class="menu-desc">Recette de la chef, café arabica, mascarpone, cacao Valrhona</div></div><span class="menu-dots"></span><span class="menu-price">9 €</span></div>
+      <div class="menu-item"><span class="menu-num">02</span><div class="menu-info"><div class="menu-name">Panna cotta</div><div class="menu-desc">Crème vanille, coulis de fruits rouges, pistaches</div></div><span class="menu-dots"></span><span class="menu-price">8 €</span></div>
+      <div class="menu-item"><span class="menu-num">03</span><div class="menu-info"><div class="menu-name">Affogato</div><div class="menu-desc">Boule de glace vanille, espresso chaud, amaretti</div></div><span class="menu-dots"></span><span class="menu-price">7 €</span></div>
+    </div>
+  </section>
+
+  <!-- GALERIE -->
+  <section id="galerie">
+    <div class="section-header">
+      <span class="section-label" data-animate>Galerie</span>
+      <h2 class="section-title" data-animate>L'<em>atmosphère</em></h2>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-col">
+        <div class="gallery-item" onclick="openLb(this)">
+          <img src="facade.jpg" alt="Façade Anita">
+          <div class="gallery-overlay"><span>Voir</span></div>
+        </div>
+      </div>
+      <div class="gallery-col">
+        <div class="gallery-item" onclick="openLb(this)">
+          <img src="interieur.jpg" alt="Salle Anita">
+          <div class="gallery-overlay"><span>Voir</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLb(this)">
+          <img src="pates.jpg" alt="Pâtes Anita">
+          <div class="gallery-overlay"><span>Voir</span></div>
+        </div>
+      </div>
+      <div class="gallery-col">
+        <div class="gallery-item" onclick="openLb(this)">
+          <img src="terrasse.jpg" alt="Terrasse Anita">
+          <div class="gallery-overlay"><span>Voir</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORAIRES -->
+  <section id="horaires">
+    <div class="section-header">
+      <span class="section-label" data-animate>Planning</span>
+      <h2 class="section-title" data-animate>Nos <em>horaires</em></h2>
+    </div>
+    <div class="horaires-list" data-animate="scale">
+      <div class="horaire-line" id="hd0"><span class="horaire-day">Dimanche</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd1"><span class="horaire-day">Lundi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd2"><span class="horaire-day">Mardi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd3"><span class="horaire-day">Mercredi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd4"><span class="horaire-day">Jeudi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd5"><span class="horaire-day">Vendredi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd6"><span class="horaire-day">Samedi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+    </div>
+  </section>
+
+  <!-- RÉSERVATION -->
+  <section id="reservation">
+    <div class="section-header">
+      <span class="section-label" data-animate>Nous rejoindre</span>
+      <h2 class="section-title" data-animate>Réserver <em>une table</em></h2>
+    </div>
+    <div class="resa-grid">
+      <div data-animate="left">
+        <div class="cinfo-item">
+          <svg class="cinfo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.82 19.79 19.79 0 01.01 4.2C0 3.1.87 2 2 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <div><span class="cinfo-label">Téléphone</span><div class="cinfo-val"><a href="tel:+33145272493">01 45 27 24 93</a></div></div>
+        </div>
+        <div class="cinfo-item">
+          <svg class="cinfo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><span class="cinfo-label">Adresse</span><div class="cinfo-val">182 Quai Louis Blériot<br>75016 Paris</div></div>
+        </div>
+        <div class="cinfo-item">
+          <svg class="cinfo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div><span class="cinfo-label">Horaires</span><div class="cinfo-val">7j/7 · 12h–14h30 & 19h–23h</div></div>
+        </div>
+        <div class="cinfo-item">
+          <svg class="cinfo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          <div><span class="cinfo-label">Instagram</span><div class="cinfo-val"><a href="#">@anita_restaurant</a></div></div>
+        </div>
+      </div>
+
+      <div data-animate="right">
+        <!-- Remplace YOUR_FORM_ID par ton ID Formspree (gratuit sur formspree.io) -->
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" onsubmit="return handleForm(event)">
+          <input type="hidden" name="_subject" value="Nouvelle réservation — Anita">
+          <div class="fg"><label>Nom complet</label><input type="text" name="nom" placeholder="Jean Dupont" required></div>
+          <div class="fg"><label>Téléphone</label><input type="tel" name="telephone" placeholder="06 00 00 00 00" required></div>
+          <div class="fg"><label>Email</label><input type="email" name="email" placeholder="jean@exemple.fr" required></div>
+          <div class="fg">
+            <label>Date souhaitée</label>
+            <input type="date" name="date" required>
+          </div>
+          <div class="fg">
+            <label>Nombre de personnes</label>
+            <select name="couverts">
+              <option>1 personne</option><option>2 personnes</option>
+              <option selected>3 personnes</option><option>4 personnes</option>
+              <option>5 personnes</option><option>6 personnes</option>
+              <option>7 personnes</option><option>8 personnes et +</option>
+            </select>
+          </div>
+          <div class="fg"><label>Message</label><textarea name="message" placeholder="Allergies, anniversaire, occasion spéciale…"></textarea></div>
+          <button type="submit" class="btn-send">Envoyer la demande →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=2.256,48.843,2.276,48.853&layer=mapnik&marker=48.848,2.266" title="Anita — Paris 16e"></iframe>
+    <div class="map-card">
+      <div class="map-card-name">Anita</div>
+      <div class="map-card-addr">182 Quai Louis Blériot · Paris 16<sup>e</sup></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="f-logo">Anita</div>
+    <nav class="f-links">
+      <a href="#about">Le restaurant</a>
+      <a href="#menu">La carte</a>
+      <a href="#galerie">Galerie</a>
+      <a href="#reservation">Réservation</a>
+    </nav>
+    <div class="f-copy">© 2025 Anita · Paris 16<sup>e</sup></div>
+  </footer>
+
+</div><!-- /content -->
+
+<script>
+  // NAV
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
+
+  // BURGER
+  document.getElementById('burger').addEventListener('click', () => document.getElementById('mob').classList.toggle('open'));
+  function closeMob() { document.getElementById('mob').classList.remove('open'); }
+
+  // HERO SCROLL-TO-EXPAND
+  const heroEl    = document.getElementById('hero');
+  const heroMedia = document.getElementById('heroMedia');
+  const heroBg    = document.getElementById('heroBg');
+  const wL = document.getElementById('wL'), wR = document.getElementById('wR');
+  const hSub = document.getElementById('hSub'), hHint = document.getElementById('hHint');
+  const content = document.getElementById('content');
+
+  let prog = 0, expanded = false;
+  document.body.style.overflow = 'hidden';
+
+  function applyProg(p) {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    heroMedia.style.width  = (320 + p * (vw - 320)) + 'px';
+    heroMedia.style.height = (420 + p * (vh - 420)) + 'px';
+    heroMedia.style.borderRadius = ((1 - p) * 20) + 'px';
+    heroMedia.style.boxShadow = `0 ${30*(1-p)}px ${80*(1-p)}px rgba(0,0,0,${0.6*(1-p)})`;
+    heroBg.style.opacity = 1 - p;
+    const tx = p * 35;
+    wL.style.transform = `translateX(-${tx}vw)`;
+    wR.style.transform = `translateX(${tx}vw)`;
+    const fade = p < 0.75 ? 1 : Math.max(0, 1 - (p - 0.75) / 0.25);
+    wL.style.opacity = wR.style.opacity = fade;
+    hSub.style.transform  = `translateX(${tx*0.5}vw)`;
+    hHint.style.transform = `translateX(-${tx*0.5}vw)`;
+    hSub.style.opacity = hHint.style.opacity = Math.max(0, 1 - p * 2.5);
+  }
+
+  function move(delta) {
+    if (expanded) return;
+    prog = Math.min(1, Math.max(0, prog + delta));
+    applyProg(prog);
+    if (prog >= 1) {
+      expanded = true;
+      document.body.style.overflow = '';
+      heroEl.style.position = 'relative';
+      content.style.opacity = '1';
+      content.style.pointerEvents = 'auto';
+    }
+  }
+
+  applyProg(0);
+  window.addEventListener('wheel', e => {
+    if (!expanded) { e.preventDefault(); move(e.deltaY * 0.001); }
+    else if (window.scrollY === 0 && e.deltaY < 0) {
+      expanded = false; document.body.style.overflow = 'hidden';
+      heroEl.style.position = 'fixed'; move(e.deltaY * 0.001);
+    }
+  }, { passive: false });
+
+  let ty = 0;
+  window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (!expanded) { e.preventDefault(); const d = ty - e.touches[0].clientY; ty = e.touches[0].clientY; move(d * 0.004); }
+  }, { passive: false });
+
+  // MENU TABS
+  function showTab(id, btn) {
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // LIGHTBOX
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+  document.getElementById('lb-close').onclick = () => lb.classList.remove('open');
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+  function openLb(el) { lbImg.src = el.querySelector('img').src; lb.classList.add('open'); }
+
+  // HORAIRES & BADGE
+  (function() {
+    const now = new Date(), day = now.getDay(), h = now.getHours() + now.getMinutes()/60;
+    const isOpen = (h >= 12 && h < 14.5) || (h >= 19 && h < 23);
+    const line = document.getElementById('hd' + day);
+    if (line) {
+      line.classList.add('today');
+      const span = line.querySelector('.horaire-day');
+      const dot = document.createElement('span'); dot.className = 'dot-pulse';
+      span.prepend(dot);
+    }
+    const badge = document.getElementById('badge');
+    badge.classList.add(isOpen ? 'open' : 'closed');
+    document.getElementById('btxt').textContent = isOpen ? 'Ouvert' : 'Fermé';
+  })();
+
+  // FORM
+  function handleForm(e) {
+    const action = e.target.action;
+    if (action.includes('YOUR_FORM_ID')) {
+      e.preventDefault();
+      alert('Demande envoyée ! Anita vous recontactera pour confirmer.');
+      e.target.reset();
+      return false;
+    }
+    // Si Formspree configuré, laisser passer normalement
+    return true;
+  }
+
+  // PARALLAX
+  window.addEventListener('scroll', () => {
+    const wrap = document.querySelector('.about-img-wrap');
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    document.getElementById('aboutImg').style.transform = `translateY(${(rect.top / window.innerHeight) * 40}px)`;
+  });
+
+  // COUNTER
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.counter);
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const decimals = parseInt(el.dataset.decimal || '0');
+    const start = performance.now();
+    const tick = now => {
+      const p = Math.min((now - start) / 1800, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + (target * ease).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // INTERSECTION OBSERVER
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const idx = [...(el.parentElement?.children || [])].indexOf(el);
+      el.style.transitionDelay = (idx * 90) + 'ms';
+      el.classList.add('in');
+      io.unobserve(el);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('[data-animate]').forEach(el => io.observe(el));
+
+  // Observer stats (counters)
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('[data-counter]').forEach(animateCounter);
+        statsObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  const stats = document.querySelector('.about-stats');
+  if (stats) statsObs.observe(stats);
+
+  // Observer galerie (stagger)
+  const galObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.gallery-item').forEach((item, i) => {
+          setTimeout(() => item.classList.add('in'), i * 120);
+        });
+        galObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const grid = document.getElementById('galleryGrid');
+  if (grid) galObs.observe(grid);
+
+  // Observer formulaire (stagger)
+  const fgObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.fg').forEach((fg, i) => {
+          setTimeout(() => fg.classList.add('in'), i * 80);
+        });
+        fgObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('form').forEach(f => fgObs.observe(f));
+</script>
+</body>
+</html>
