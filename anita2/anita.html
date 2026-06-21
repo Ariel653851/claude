@@ -151,6 +151,37 @@
       position: relative; z-index: 1; margin-top: 100vh;
     }
 
+    /* ── HERO MOBILE : hero statique plein écran ── */
+    @media (max-width: 800px) {
+      #hero {
+        position: relative;
+        height: 100vh;
+        background-image: url('facade.jpg'), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80');
+        background-size: cover;
+        background-position: center;
+      }
+      .hero-bg-blur { display: none; }
+      .hero-media-wrap { display: none; }
+      #hero::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(34,20,16,0.45) 0%, rgba(34,20,16,0.7) 100%);
+      }
+      .hero-title-wrap { z-index: 3; }
+      .hero-word {
+        font-size: clamp(4rem, 20vw, 7rem);
+        mix-blend-mode: normal;
+        color: #fff;
+        text-shadow: 0 2px 30px rgba(0,0,0,0.4);
+      }
+      .hero-sub, .hero-hint { z-index: 3; }
+      #content {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        margin-top: 0;
+      }
+    }
+
     /* ── ABOUT ── */
     #about { padding: 10rem 6%; background: var(--bg); }
     .about-grid {
@@ -732,7 +763,8 @@
   const content = document.getElementById('content');
 
   let prog = 0, expanded = false;
-  document.body.style.overflow = 'hidden';
+  const isMobile = window.innerWidth <= 800 || ('ontouchstart' in window);
+  if (!isMobile) document.body.style.overflow = 'hidden';
 
   function applyProg(p) {
     const vw = window.innerWidth, vh = window.innerHeight;
@@ -764,44 +796,14 @@
     }
   }
 
-  applyProg(0);
-
-  const isMobile = window.matchMedia('(max-width: 800px)').matches || ('ontouchstart' in window && window.innerWidth < 800);
-
-  if (isMobile) {
-    setTimeout(() => {
-      const duration = 1200;
-      const startTs = performance.now();
-      function animExpand(ts) {
-        const p = Math.min((ts - startTs) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        prog = ease;
-        applyProg(prog);
-        if (p < 1) {
-          requestAnimationFrame(animExpand);
-        } else {
-          expanded = true;
-          document.body.style.overflow = '';
-          heroEl.style.position = 'relative';
-          content.style.opacity = '1';
-          content.style.pointerEvents = 'auto';
-        }
-      }
-      requestAnimationFrame(animExpand);
-    }, 800);
-  } else {
+  if (!isMobile) {
+    applyProg(0);
     window.addEventListener('wheel', e => {
       if (!expanded) { e.preventDefault(); move(e.deltaY * 0.001); }
       else if (window.scrollY === 0 && e.deltaY < 0) {
         expanded = false; document.body.style.overflow = 'hidden';
         heroEl.style.position = 'fixed'; move(e.deltaY * 0.001);
       }
-    }, { passive: false });
-
-    let ty = 0;
-    window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
-    window.addEventListener('touchmove', e => {
-      if (!expanded) { e.preventDefault(); const d = ty - e.touches[0].clientY; ty = e.touches[0].clientY; move(d * 0.008); }
     }, { passive: false });
   }
 
