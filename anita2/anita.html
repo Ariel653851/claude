@@ -695,29 +695,14 @@
         </div>
       </div>
 
-      <div data-animate="right">
-        <!-- Remplace YOUR_FORM_ID par ton ID Formspree (gratuit sur formspree.io) -->
-        <form action="https://formspree.io/f/mdarnyed" method="POST" onsubmit="return handleForm(event)">
-          <input type="hidden" name="_subject" value="Nouvelle réservation — Anita">
-          <div class="fg"><label>Nom complet</label><input type="text" name="nom" placeholder="Jean Dupont" required></div>
-          <div class="fg"><label>Téléphone</label><input type="tel" name="telephone" placeholder="06 00 00 00 00" required></div>
-          <div class="fg"><label>Email</label><input type="email" name="email" placeholder="jean@exemple.fr" required></div>
-          <div class="fg">
-            <label>Date souhaitée</label>
-            <input type="date" name="date" required>
-          </div>
-          <div class="fg">
-            <label>Nombre de personnes</label>
-            <select name="couverts">
-              <option>1 personne</option><option>2 personnes</option>
-              <option selected>3 personnes</option><option>4 personnes</option>
-              <option>5 personnes</option><option>6 personnes</option>
-              <option>7 personnes</option><option>8 personnes et +</option>
-            </select>
-          </div>
-          <div class="fg"><label>Message</label><textarea name="message" placeholder="Allergies, anniversaire, occasion spéciale…"></textarea></div>
-          <button type="submit" class="btn-send">Envoyer la demande →</button>
-        </form>
+      <div data-animate="right" style="display:flex; flex-direction:column; justify-content:center; align-items:center; gap:2rem; text-align:center; padding: 3rem 2rem; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.8; max-width:320px;">
+          Réservez directement en ligne via notre système de réservation. Confirmation immédiate, gestion des disponibilités en temps réel.
+        </p>
+        <a href="https://bookings.zenchef.com/results?rid=356435&pid=1001" target="_blank" class="btn-send" style="display:inline-block; text-decoration:none; padding: 1rem 2rem; max-width:320px;">
+          Réserver une table →
+        </a>
+        <p style="font-size:0.75rem; color:var(--text-muted);">Propulsé par Zenchef · Confirmation immédiate</p>
       </div>
     </div>
   </section>
