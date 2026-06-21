@@ -769,17 +769,23 @@
   const isMobile = window.matchMedia('(max-width: 800px)').matches || ('ontouchstart' in window && window.innerWidth < 800);
 
   if (isMobile) {
-    // Sur mobile : expand automatique après 1.2s avec animation fluide
-    heroEl.style.transition = 'none';
-    heroMedia.style.transition = 'width 1.1s cubic-bezier(0.16,1,0.3,1), height 1.1s cubic-bezier(0.16,1,0.3,1), border-radius 1.1s cubic-bezier(0.16,1,0.3,1)';
     setTimeout(() => {
-      let start = null;
+      const duration = 1200;
+      const startTs = performance.now();
       function animExpand(ts) {
-        if (!start) start = ts;
-        const p = Math.min((ts - start) / 1100, 1);
+        const p = Math.min((ts - startTs) / duration, 1);
         const ease = 1 - Math.pow(1 - p, 3);
-        move(ease * 0.02);
-        if (prog < 1) requestAnimationFrame(animExpand);
+        prog = ease;
+        applyProg(prog);
+        if (p < 1) {
+          requestAnimationFrame(animExpand);
+        } else {
+          expanded = true;
+          document.body.style.overflow = '';
+          heroEl.style.position = 'relative';
+          content.style.opacity = '1';
+          content.style.pointerEvents = 'auto';
+        }
       }
       requestAnimationFrame(animExpand);
     }, 800);
