@@ -181,12 +181,12 @@
       }
       .hero-title-wrap {
         position: relative; z-index: 3;
-        flex-direction: column; gap: 0;
+        flex-direction: row; gap: 0;
         margin-bottom: 0.5rem;
         align-items: center; justify-content: center;
       }
       .hero-word {
-        font-size: clamp(4.5rem, 22vw, 8rem);
+        font-size: clamp(3.5rem, 17vw, 6rem);
         mix-blend-mode: normal;
         color: #fff;
         text-shadow: 0 2px 40px rgba(0,0,0,0.5);
@@ -367,8 +367,11 @@
     }
 
     @media (max-width: 800px) {
-      .menu-grid { grid-template-columns: 1fr; }
+      .menu-grid { grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
       .menu-desc { white-space: normal; }
+      .menu-name { font-size: 0.82rem; }
+      .menu-price { font-size: 0.82rem; }
+      .svc-num { font-size: 1.6rem; }
     }
 
     /* ── GALERIE ── */
@@ -592,11 +595,12 @@
       .menu-price { font-size: 0.88rem; }
       .menu-dots { display: none; }
 
-      /* Gallery — 2 colonnes serrées */
-      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-      .gallery-col { gap: 6px; }
-      .gallery-col:nth-child(3) { display: flex; margin-top: 0; }
-      .gallery-col .gallery-item img { height: 160px !important; border-radius: 10px; }
+      /* Gallery — grille uniforme 2 colonnes */
+      .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+      .gallery-col { display: contents; }
+      .gallery-item { margin-top: 0 !important; }
+      .gallery-col .gallery-item img,
+      .gallery-item img { height: 150px !important; border-radius: 10px; }
 
       /* Horaires */
       .horaire-row { font-size: 0.82rem; padding: 0.75rem 0; }
