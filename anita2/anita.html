@@ -546,15 +546,28 @@
 
       /* Menu tabs — scroll horizontal */
       .menu-tabs {
+        display: flex;
         flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        gap: 0.5rem;
-        padding-bottom: 0.5rem;
+        gap: 0;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: var(--radius-sm);
+        margin-bottom: 2.5rem;
       }
       .menu-tabs::-webkit-scrollbar { display: none; }
-      .tab-btn { white-space: nowrap; flex-shrink: 0; padding: 0.6rem 1.1rem; font-size: 0.7rem; }
+      .tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 0.85rem 1.2rem;
+        font-size: 0.68rem;
+        min-height: 48px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
 
       /* Gallery — 1 colonne full width */
       .gallery-grid { grid-template-columns: 1fr; }
@@ -963,6 +976,13 @@
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
   }
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      const id = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+      showTab(id, this);
+    }, { passive: false });
+  });
 
   // LIGHTBOX
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
