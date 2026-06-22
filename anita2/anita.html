@@ -367,29 +367,85 @@
     }
 
     @media (max-width: 800px) {
-      /* Menu — liste simple 1 colonne, style épuré */
+      #menu { padding: 3.5rem 0; }
+      .menu-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        border: none;
+        background: none;
+        width: 100%;
+        gap: 0.5rem;
+        padding: 0 5% 1rem;
+        margin: 0 0 2.5rem;
+      }
+      .menu-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        border-radius: 2px;
+        border: 1px solid var(--border) !important;
+        border-right: 1px solid var(--border) !important;
+        min-height: 40px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      .tab-btn.active {
+        background: var(--accent);
+        border-color: var(--accent) !important;
+        color: #fff;
+      }
+
+      /* Menu panel */
+      .menu-panel { padding: 0 5%; }
       .menu-grid { grid-template-columns: 1fr; gap: 0; }
+
+      /* Chaque item = ligne carte de restaurant */
       .menu-item {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-        padding: 0.9rem 0;
-        gap: 0.5rem;
-        border-bottom: 1px solid var(--border);
+        padding: 1rem 0;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-right: none;
+        transform: none !important;
       }
+      .menu-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
       .menu-num { display: none; }
       .menu-dots { display: none; }
       .menu-item::before { display: none; }
-      .menu-info { flex: 1; }
-      .menu-name { font-size: 0.88rem; font-weight: 400; color: var(--text); line-height: 1.3; }
-      .menu-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; white-space: normal; }
+      .menu-info { flex: 1; min-width: 0; }
+      .menu-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.95rem;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .menu-desc {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        margin-top: 0.2rem;
+        white-space: normal;
+        font-style: normal;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.02em;
+      }
       .menu-price {
-        font-size: 0.88rem;
+        font-size: 0.82rem;
         font-family: 'Inter', sans-serif;
         font-style: normal;
-        color: var(--accent2);
-        font-weight: 500;
+        font-weight: 400;
+        color: var(--text-muted);
         flex-shrink: 0;
+        padding-top: 0.15rem;
       }
     }
 
