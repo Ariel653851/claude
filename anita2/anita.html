@@ -883,13 +883,13 @@
       <h2 class="section-title" data-animate>Nos <em>horaires</em></h2>
     </div>
     <div class="horaires-list" data-animate="scale">
-      <div class="horaire-line" id="hd0"><span class="horaire-day">Dimanche</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd1"><span class="horaire-day">Lundi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd2"><span class="horaire-day">Mardi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd3"><span class="horaire-day">Mercredi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd4"><span class="horaire-day">Jeudi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd5"><span class="horaire-day">Vendredi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
-      <div class="horaire-line" id="hd6"><span class="horaire-day">Samedi</span><span class="horaire-time">12h00 — 14h30 · 19h00 — 23h00</span></div>
+      <div class="horaire-line" id="hd0"><span class="horaire-day">Dimanche</span><span class="horaire-time">Fermé</span></div>
+      <div class="horaire-line" id="hd1"><span class="horaire-day">Lundi</span><span class="horaire-time">12h00 — 14h30</span></div>
+      <div class="horaire-line" id="hd2"><span class="horaire-day">Mardi</span><span class="horaire-time">12h00 — 14h30 · 19h15 — 00h00</span></div>
+      <div class="horaire-line" id="hd3"><span class="horaire-day">Mercredi</span><span class="horaire-time">12h00 — 14h30 · 19h15 — 00h00</span></div>
+      <div class="horaire-line" id="hd4"><span class="horaire-day">Jeudi</span><span class="horaire-time">12h00 — 14h30 · 19h15 — 00h00</span></div>
+      <div class="horaire-line" id="hd5"><span class="horaire-day">Vendredi</span><span class="horaire-time">12h00 — 14h30 · 19h15 — 00h00</span></div>
+      <div class="horaire-line" id="hd6"><span class="horaire-day">Samedi</span><span class="horaire-time">19h15 — 00h00</span></div>
     </div>
   </section>
 
@@ -1040,7 +1040,11 @@
   // HORAIRES & BADGE
   (function() {
     const now = new Date(), day = now.getDay(), h = now.getHours() + now.getMinutes()/60;
-    const isOpen = (h >= 12 && h < 14.5) || (h >= 19 && h < 23);
+    // Dimanche=0 fermé, Lundi=1 midi seulement, Sam=6 soir seulement, Mar-Ven midi+soir
+    const isOpen = day === 0 ? false
+      : day === 1 ? (h >= 12 && h < 14.5)
+      : day === 6 ? (h >= 19.25)
+      : (h >= 12 && h < 14.5) || (h >= 19.25);
     const line = document.getElementById('hd' + day);
     if (line) {
       line.classList.add('today');
