@@ -531,65 +531,85 @@
       /* Nav */
       .nav-links, .nav-tel { display: none; }
       .burger { display: flex; }
-      nav { padding: 1.2rem 5%; }
+      nav { padding: 1rem 5%; }
 
-      /* Sections padding */
-      #about, #menu, #galerie, #horaires, #reservation { padding: 4rem 5%; }
+      /* Sections padding — plus aéré */
+      #about { padding: 4rem 5% 3rem; }
+      #menu { padding: 4rem 5%; }
+      #galerie { padding: 3.5rem 4%; }
+      #horaires { padding: 3.5rem 5%; }
+      #reservation { padding: 3.5rem 5%; }
 
-      /* About */
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      /* About — image pleine largeur arrondie */
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
       .about-grid > *:first-child { order: 2; }
       .about-grid > *:last-child { order: 1; }
-      .about-img-wrap img { height: 260px; }
-      .about-stats { gap: 1.5rem; flex-wrap: wrap; }
-      .section-title { font-size: clamp(2rem, 8vw, 3rem); }
+      .about-img-wrap { border-radius: 16px; }
+      .about-img-wrap img { height: 300px; border-radius: 16px; }
+      .about-stats { gap: 2rem; flex-wrap: wrap; justify-content: space-between; }
+      .stat-val { font-size: 1.6rem; }
+      .section-title { font-size: clamp(2rem, 8vw, 2.8rem); }
+      .about-text { font-size: 0.9rem; line-height: 1.75; }
 
-      /* Menu tabs — scroll horizontal */
+      /* Marquee — plus petit sur mobile */
+      .marquee-track { font-size: 0.68rem; }
+
+      /* Menu tabs — scroll horizontal sans bord */
       .menu-tabs {
         display: flex;
         flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        gap: 0;
+        gap: 0.5rem;
         width: 100%;
         margin-left: 0;
         margin-right: 0;
-        border-radius: var(--radius-sm);
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
+        border: none;
+        background: none;
+        padding-bottom: 0.3rem;
       }
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab-btn {
         white-space: nowrap;
         flex-shrink: 0;
-        padding: 0.85rem 1.2rem;
+        padding: 0.7rem 1.2rem;
         font-size: 0.68rem;
-        min-height: 48px;
+        min-height: 44px;
+        border-radius: 30px;
+        border: 1px solid var(--border) !important;
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
       }
+      .tab-btn.active { border-color: var(--accent) !important; }
 
-      /* Gallery — 1 colonne full width */
-      .gallery-grid { grid-template-columns: 1fr; }
-      .gallery-col { display: flex; flex-direction: column; gap: 8px; }
+      /* Menu items — plus lisibles */
+      .service-item { padding: 1rem 0; gap: 0.6rem; }
+      .svc-num { font-size: 1.8rem; min-width: 2.5rem; }
+      .menu-name { font-size: 0.88rem; }
+      .menu-desc { font-size: 0.72rem; }
+      .menu-price { font-size: 0.88rem; }
+      .menu-dots { display: none; }
+
+      /* Gallery — 2 colonnes serrées */
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .gallery-col { gap: 6px; }
       .gallery-col:nth-child(3) { display: flex; margin-top: 0; }
-      .gallery-col .gallery-item img { height: 220px !important; }
-
-      /* Contact */
-      .resa-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .resa-info { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+      .gallery-col .gallery-item img { height: 160px !important; border-radius: 10px; }
 
       /* Horaires */
       .horaire-row { font-size: 0.82rem; padding: 0.75rem 0; }
       .map-card { left: 1rem; right: 1rem; bottom: 1rem; }
 
-      /* Menu items */
-      .service-item { padding: 0.9rem 0; }
-      .svc-num { font-size: 2.2rem; }
+      /* Contact */
+      .resa-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .resa-info { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+      .cinfo-item { gap: 0.8rem; }
 
       /* Footer */
-      footer { flex-direction: column; gap: 1rem; text-align: center; }
-      .f-links { flex-wrap: wrap; justify-content: center; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 5%; }
+      .f-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
     }
   </style>
 </head>
