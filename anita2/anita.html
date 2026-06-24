@@ -593,6 +593,9 @@
     .f-links a { font-size: 0.72rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
     .f-links a:hover { color: var(--text); }
     .f-copy { font-size: 0.72rem; color: var(--text-muted); }
+    .f-insta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .f-insta:hover { color: var(--accent2); }
+    .f-insta svg { flex-shrink: 0; }
 
     /* ── ANIMATE BASE ── */
     [data-animate] {
@@ -968,7 +971,7 @@
 
         <div class="cinfo-item">
           <svg class="cinfo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          <div><span class="cinfo-label">Instagram</span><div class="cinfo-val"><a href="#">@anita_restaurant</a></div></div>
+          <div><span class="cinfo-label">Instagram</span><div class="cinfo-val"><a href="https://www.instagram.com/anita_restaurant" target="_blank" rel="noopener">@anita_restaurant</a></div></div>
         </div>
       </div>
 
@@ -1002,6 +1005,10 @@
       <a href="#galerie">Galerie</a>
       <a href="#reservation">Réservation</a>
     </nav>
+    <a href="https://www.instagram.com/anita_restaurant" target="_blank" rel="noopener" class="f-insta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      @anita_restaurant
+    </a>
     <div class="f-copy">© 2025 Anita · Paris 16<sup>e</sup></div>
   </footer>
 
